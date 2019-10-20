@@ -1,0 +1,12 @@
+# Rime user dictionary
+#@/db_name	luna_pinyin.userdb
+#@/db_type	userdb
+#@/rime_version	1.5.3
+#@/tick	4
+#@/user_id	25b96890-cfc4-4aa0-9107-805aa008fbdd
+a 	啊	c=1 d=1 t=2
+da fa shi 	大法師	c=1 d=1 t=3
+da sa 	搭撒	c=0 d=0.1 t=0
+da sa fang fa 	搭撒方法	c=1 d=1 t=1
+fang fa 	方法	c=0 d=0.1 t=0
+ni hao 	你好	c=1 d=1 t=4

@@ -1,0 +1,65 @@
+- assume its UEFI
+
+*************************************
+do the following before chroot in
+*************************************
+- first need to format the partitions, so should format the root folder as "ext4", and the /efi as "vfat"
+- mount the file systems: 
+mount /dev/sdX1 (root directory) /mnt
+mount /dev/sdY1 (efi stuff) /mnt/efi (create /mnt/efi first)
+
+- use pacman to install the base stuff:
+pacstrap /mnt base base-devel	(base -devel is optional.. whatever)
+- generate fstab
+
+*************************************
+ chroot in
+*************************************
+
+- for time, should first get sudo (or else it does not show all timezones idk why...) 
+- for list timezones just do 
+sudo timedatectl list-timezones
+- then just set it  
+sudo timedatectl set-timezone Canada/Mountain
+- then symlink it to the /etc/localtime
+ln -sf /usr/share/zoneinfo/Canada/Mountain /etc/localtime
+
+- then edit /etc/locale.gen to get the language you need, which would be 
+en_US.UTF-8
+and other chinese locales
+- then create /etc/locale.conf, and add "LANG=en_US.UTF-8"
+
+-for creating a user:
+useradd -m  -G wheel,otherGroups -s /bin/bash kevin (groups can be found on arch wiki)
+
+- go to visudo and uncomment:
+%wheel ALL=(ALL) ALL
+
+
+-initramfs
+mkinitcpio -p linux
+- if have these warnings (but its just warnings and the firmware is in AUR, can actually safely ignore..):
+Possibly missing firmware for module: aic94xx
+ Possibly missing firmware for module: wd719x
+ - just do:
+
+git clone https://aur.archlinux.org/aic94xx-firmware.git
+cd aic94xx-firmware
+makepkg -sri
+
+git clone https://aur.archlinux.org/wd719x-firmware.git
+cd wd719x-firmware
+makepkg -sri
+
+-pacman.conf: add this line for archlinuxcn
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+
+-should get grub for bootloader, and create /boot/efi and mount it there
+- firstly mount the /boot/efi ..
+- then do the commands on the wiki, and then grub-install
+- since we need to duoboot, need to install os-prober and ntfs-3g and dislocker then mount the windows bootloader, then remake grubconfig.. 
+- to create the grub.cfg use
+ grub-mkconfig -o /boot/grub/grub.cfg
+
+-exit chroot
+- umount -R /mnt and reboot

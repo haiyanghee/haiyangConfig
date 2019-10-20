@@ -1,0 +1,7 @@
+set page-padding 1
+set statusbar-h-padding 1
+set statusbar-v-padding 1
+set statusbar-home-tilde
+set selection-clipboard clipboard
+set synctex true
+set synctex-editor-command "gvim +%{line} %{input}"
