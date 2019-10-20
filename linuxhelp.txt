@@ -1,0 +1,538 @@
+*********************
+linux commands
+*********************
+---------------------
+key failures during makepkg -si
+---------------------
+gpg --recv-keys <KEYID - See 'validpgpkeys' array in PKGBUILD>
+
+---------------------
+neovim
+---------------------
+- neovim's vimrc is stored at ~/.config/nvim/init.vim
+- neovim's plugins are in ~/.local/share/nvim/site/autoload/
+
+---------------------
+my stupid way of making pulseaudio worked by changing ownership and permission of all files in home directory:
+---------------------
+- just chmod 751 everything
+- then tried to chmod 644 the textfiles.. 
+- to chmod certain type of extension just use :
+find . -name "*.txt" -exec chmod 644 {} \;
+
+-see keys:
+xev
+
+-changing brightness:
+cd /sys/class/backlight/intel_backlight
+sudo vim backlight
+
+
+
+//change the value to like 10000
+//revert change back to 24000 (maximum brightness)
+
+-rm <file>: delete / remove a file
+-rm -rf <dir>: delete a folder / directory
+-rm worksheet* //will delete files start with "worksheet" and any other names after that.. Ex:
+if have files: a1,a2,a3..... will delete all of them
+
+-mkdir <dir>: make a directory
+-pwd: tell your location
+-touch <file>: create a file
+
+-creating symlinks:
+-path to file is the directory that you want to symlink
+-path to symlink is the directory you want to add a symlink to
+ln -s /path/to/file /path/to/symlink
+-create or update symlink:
+ln -sf /path/to/file /path/to/symlink
+
+-pacman -Ss <string>: will search up the matched files of the string (if do pacman -Ss mplayer, will show description of packages named "mplayer" and the maches for that string)
+-pacman -R <name> will remove SINGLE PACKAGE, leaving all its DEPENDENCY
+-pacman -Rs <name> will remove a package AND ALL OF ITS DEPENDENCIES which are not required by other installed 
+-pacman -Rns <name> will WARNING THIS IS RECURSIVE!!!!!! remove a package, its dependencies and ALL THE PACKAGES THAT DEPEND ON THE TARGET PACKAGE.
+
+-pacman -Syu will UPDATE ALL OF THE PACKAGES ;)
+
+-cloc is the command to see the lines of codes in folder
+-deepin-screenshot will take screen shot with specified location! or use scrot if you want the entire screen to be captured
+
+-cp file1 file 2 : copy file 1 and name it file 2 in the same directory
+-cp -r directory1/ directory2/
+-mv file1 file1Renamed: will rename the file
+-mv directory1/ directory2/: will move directories.. ADD THE "/" at the end to show that it is a directory
+
+-tar xvf file.tar.gz :will extract the tar.gz file
+
+-to zip or unzip:
+zip ....
+unzip ...
+-7z x file: extract the .zip file into a folder
+
+** config stuff are usually stored in ~/.config,  or in /usr/bin
+**applications are in /usr/bin,  or in/etc/....
+
+-to make bash files excecutable:
+chmod +x bashfile.sh
+chmod -x bashfile.sh if want not make excecutable
+-now you can run the bash file by just typing the name of the bash file
+
+*********************
+bash
+*********************
+- for great string manupulation in bash script look at
+https://stackoverflow.com/questions/19482123/extract-part-of-a-string-using-bash-cut-split
+
+*********************
+mounting usb
+*********************
+-use lsblk to see the name of usb
+-udisksctl mount -b /dev/sdc1
+-udisksctl unmount -b /dev/sdc1
+
+
+-first, make a directory (can just make it in home folder)
+mkdir usb
+-then type "lsblk" to see the name of the usb (ex: sdc1)
+-then just mount it..
+TO MAKE IT WRITABLE::
+mount -o gid=users,fmask=113,dmask=002 /dev/sdc1 /usb_folder_path
+NOT WRITABE (PROABLY):
+mount /dev/usb-sd-name PATHOFFOLDER
+ORRRRRR
+mount -t autp /dev/usb-sd-name PATHOFFOLDER
+
+-To unmount:
+umount usb
+
+-burning iso files into usb:
+dd bs=4M if=path/to/archlinux.iso of=/dev/sdx status=progress oflag=sync
+OR
+dd if=path/to/arch.iso of=/dev/rdiskX bs=1m
+
+*********************
+configuring GRUB to show windows
+*********************
+-install ntfs-3g, os-prober, and grub
+pacman -S ntfs-3g
+-After installing ntfs-3g, then run os-prober. Then you should see your windows bootloader. Ex:
+[haiyang@hhy]$ sudo os-prober
+/dev/sdb1@/efi/Microsoft/Boot/bootmgfw.efi:Windows Boot Manager:Windows:efi
+-then update grub:
+grub-mkconfig -o /boot/grub/grub.cfg
+
+*********************
+power mangement
+*********************
+-powertop: can see what is turned on or off
+-tlp:
+-to see status:
+sudo tlp-stat -s
+-to turn into battery or AC mode:	but it does it automatically for you!!!! ;))
+sudo tlp bat
+sudo tlp ac
+
+*********************
+i3 wm
+*********************
+-to have horizontal / vertical windows:
+    -select a window, then do mod+v for verticle, mod+c for horizontal split, then just create another tab
+-the config settings for i3 is located at:
+~/.config/i3
+
+-screen saver time:
+to check screensaver time type:
+xset q
+change screen saver time to N seconds:
+xset s 1500 1500
+*********************
+zathura
+*********************
+-need to install zathura - pdf - something for pdf support
+
+-to open zathura and be able to close the terminal after:
+zathura --fork fileName
+
+yeee!!!
+
+-have the basic vim bindings
+-to solve "ctrl+S" vim freeze (it will prevent vim to modify the file), just press "ctrl+Q" to solve, maybe "ctrl+D"..
+
+-can do "ctrl+mouseScrollWhell" to zoom in further.. 
+-click "d" for side by side view
+-click "r" to rotate
+-click "a" to zoom OUT VERY FAR
+-click "s" to zomm IN VERY FAR
+
+-click "+" or "-" to zoom in or out
+-clikc "ctrl+p" to print
+
+
+*********************
+fcitx
+*********************
+-ctrl+alt+h		trigger spellign check
+-ctrl+alt+shift+u 	can search unicode characters
+-use TAB to select the wanted word and press enter or spacebar
+-ctrl+;			show 5 things copied from clipboard
+
+*********************
+files:
+*********************
+-in /etc/pacman.conf , include these:
+[archlinuxcn]
+Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
+[multilib]
+Include = /etc/pacman.d/mirrorlist
+
+-installing flash:
+-pacman -S flashplugin
+-pacman -S pepper-flash
+
+-making sure fans work:
+-install lm-sensor first
+sensor-detect
+-then download i8kutils for DELL COMPUTERS
+-in /etc/i8kutils/i8kmon.conf , add this line:
+set config(auto)       1
+-then restart computer.
+
+--------------------------------------------
+wine
+--------------------------------------------
+
+-很多中国软件都可以在这里下: winetricks-zh  一般。。winetricks 
+- winetricks riched20 可以让微信看见自己打的字
+
+
+
+-微信在这个网站下载：https://aur.archlinux.org/packages/electronic-wechat/
+-The above website might give you javascript errors, so try to download the tar on github: 
+https://github.com/kooritea/electronic-wechat
+the name would be <electronic-wechat-2.2.1.tar.gz>
+
+-first make sure pacman and system is up to date: pacman -Syu
+-Then install npm, with Node.js
+-Then run either of these 2 commands:
+makepkg -si
+OR
+npm install && npm start
+-then magic happens ;)
+
+-腾讯QQ:
+-pacman -S wine
+安装TIM更好，因为QQ更新太慢。
+****archlinuxcn上的TIM不一定能运转，所以也可以在这里下载：https://aur.archlinux.org/packages/deepin-wine-tim/
+**** git clone https://aur.archlinux.org/deepin-wine-tim.git
+**** makepkg -si
+-pacman -Ss deepin-wine :	可以看到一些选项，可以选择安装TIM或者QQ
+如果要安装TIM的话：pacman -S deepin-wine-tim
+-then go to the installed path.. 
+--if installed from git, at the same directory type "sh run.sh" , then click install QUICKLYYY
+--if installed using pacman, go to /opt/deepinwine/apps/Deepin-TIM then type "sh run.sh"
+
+-网易音乐：
+-sudo pacman -S netease-cloud-music
+
+China proxy websites:
+-best one::::::::
+http://www.freeproxylists.net/zh/?c=CN&pt=&pr=&a%5B%5D=2&u=0
+
+https://www.proxynova.com/proxy-server-list/country-cn/
+http://spys.one/free-proxy-list/CN/
+
+-use the following http_proxy: the format will be http://ip:port
+the website to get the proxy: 
+-these two are quite stable, although have longer pinging time:
+47.75.194.109:80
+http://59.44.43.198:80
+
+http://27.208.89.111:8060
+http://119.180.135.114:8060
+-this is fast but may not be very stable
+http://49.51.70.42:1080
+
+-EX:	THIS ONLY WORKS IN A CERTAIN TERMINAL!!!!!!! gona figure out how to permanently set it later
+-if want write a bash script for this, NEED TO USE "SOURCE config/bashscript.sh" !!!!!!!
+
+export http_proxy=http://27.208.89.111:8060
+export https_proxy=$http_proxy
+
+*********************
+file commands
+*********************
+- encrypt normal wifi:
+wpa_passphrase "ssid" "password"
+- this will print out the encrypted key (different ssid will have different key even with the same password!), then just copy it..
+
+- encrypt WPA:
+http://www.uni-koeln.de/~pbogusze/posts/Hash_for_wpa_supplicant_password.html 
+- first get the hash
+echo -n MySecretPassword | iconv -t utf16le | openssl md4
+- then put the password as:
+password=hash:hash_result_password
+
+
+Home wifi password: 274310459
+
+-godly code that will debug the wifi:
+https://bbs.archlinux.org/viewtopic.php?id=218418
+https://bbs.archlinux.org/viewtopic.php?id=232155
+
+-this command to see which unit files are enabled:
+systemctl list-unit-files --state=enabled
+
+-disable the possible conflicts.. then run the following:
+
+-scanning the networks:
+wpa_cli
+>scan
+>scan_results
+
+-for public networks, the password would be key_mgmt NONE
+
+sudo killall wpa_supplicant dhcpcd
+//for this computer, the command is:
+sudo wpa_supplicant -B -i wlp0s20f3 -c /etc/wpa_supplicant/a.conf
+
+//more generaly, the command is :
+//where wlp is the wifi driver in "ip link".. Then for the file in /etc/wpa_supplicant/something.conf, write your own conf..
+sample conf:
+/*
+
+ctrl_interface=/run/wpa_supplicant
+ctrl_interface_group=wheel
+update_config=1
+
+//////////this is for home network
+network={
+	ssid="SHAW-67CEB5"
+	psk="277814721"
+}
+/////////this is for my school network specifically
+network={
+	ssid="eduroam"
+	scan_ssid=1
+	key_mgmt=WPA-EAP
+	identity="haiyang.he@ucalgary.ca"
+	password="Chinahhy123.00"
+	eap=PEAP
+	phase1="peaplabel=0"
+	phase2="auth=MSCHAPV2"
+}
+*/
+sudo wpa_supplicant -B -i wlp -c /etc/wpa_supplicant/wpa_supplicant-wlp.conf
+
+sudo dhcpcd wlp
+
+-on this computer:
+sudo dhcpcd wlp0s20f3
+
+-Debugging sys-subsystem-net-devices-service.service at startup:
+//to see which service is starting at boot:
+-systemctl show -p WantedBy,RequiredBy sys-subsystem-net-devices-multi-user.device
+-TRY, BUT IDK IF WORKS:systemctl disable dhcpcd.service
+-TRY, BUT IDK IF WORKS:systemctl reset-failed
+//once found which service is timed out at boot:
+-cd /etc/systemd/system/multi-user.target.wants/
+THEN DELETE THE SERVICE THAT IS STARTING AT BOOT!
+
+
+-nm-connection-editor : a graphical interface for establishing a connection to internet
+
+-install dmenu (usse $mod + d to activate)
+-alsamixer: changes volume
+-mplayer mp3file: play the mp3 with mplayer
+-gimp : image modifier (like paint)
+-scrot : take screen shot
+-redshift : to change the backlight to night mode (similar to flux)
+-vlc: vlc media player
+-mpd: album player?..
+
+*********************
+Vim
+*********************
+-open terminal in vim: "ctrl+z" will suspend vim in background. type "fg" to resume to vim
+-vim -p files   this will open all vim files in tabs
+-"tabe" will edit the file and opens a new tab
+-"q"+":" will pop up the vim command line..
+-"x" and "X" to delete a character
+-"K@q", where "K" is a number, will do macro "q" to K number of lines!!!!
+-in visual mode, type "u" to make the selected text to become lowercased, "shift+u" to make it uppercased.
+
+-"ge" to move back to beginning of the word
+- when highlighted cursor "r" to replace a char with another char
+-"KfC",or "KfC",  where C is a character, K is a number, it will find the occurence of the character in the line.
+- when cursor highlight on  {,(,[, press "%" will bring it to the other end of the bracket.
+- when cursor highlight on a word, "#", or "*", will find all of the words that match that word.
+- go to a specific line number: "Kgg", where K is the line number
+- "J" will make the line below highlighted to go up..
+- "Kw" will go forward K number of words
+
+*********************
+Compiling
+*********************
+c++ with clang:
+-clang++ file.cpp -o outExcecutableName (this will compile file.cpp and output it as a excecutable)
+-./outExcecutableName (this will run the excecutable)
+
+SFML: clang++ main.cpp -o sfml-app-name -lsfml-graphics -lsfml-window -lsfml-system
+//need to include  -lsfml-graphics -lsfml-window -lsfml-system ....
+
+
+*********************
+youtube-dl
+*********************
+-Downloading videos:
+	youtube-dl videoURL
+	//this will show the available formats!!!!
+	youtube-dl -F videoURL
+	100 mp4 1920*1080 ........
+	//if want the 100 format option, just do:
+	youtube-dl -f 100 videoURL
+	//download audio:
+	youtube-dl -f bestaudio videoURL
+	
+
+*********************
+Git:
+*********************
+-git add <file>
+-git commit -m "message here"
+-git push
+
+-git pull
+
+-get to another branch:
+	-fetch firstttttttttttttt
+	//assume we created a branch named DebuggingCollision:
+	-git checkout --track origin/DebuggingCollision
+-merging branches:
+	-if we want to merge origin/DebuggingCollision to origin/master:
+	git checkout master	//this will set the branch to master branch
+	git merge DebuggingCollision	//this will then merge it
+
+reset git proxy:
+git config --global https.proxy ""
+git config --global http.proxy ""
+
+-explanation of the HEAD :
+"HEAD" in git is the current checked out commit -- so whatever commit you're currently at. So of you are pulling, HEAD will be your older stuff and the arbitrary string thing should be remote then. Whereas if your pushing, HEAD is your new stuff that your trying to get on git and the string is the "old stuff"
+*********************
+Eclipse and Eclim
+*********************
+-eclipse installation path:
+/usr/lib/eclipse/
+-Eclimd server:
+/home/haiyang/.eclipse/org.eclipse.platform_4.10.0_155965261_linux_gtk_x86_64/eclimd
+
+*********************
+Latex
+*********************
+-adding packages (.sty files ):
+https://tex.stackexchange.com/questions/1137/where-do-i-place-my-own-sty-or-cls-files-to-make-them-available-to-all-my-te
+-go to customized folder:
+~/texmf/tex/latex/local/
+-create the files there
+-use texhash to update the current folder to latex
+-note the path is IMPORTANT!! it will update the location (if you are in texmf directory), or just type in the path..
+texhash \path
+
+*********************
+HDMI connect hdmi
+*********************
+-just run the xrandr to see if HDMI is connected or not
+xrandr
+
+-can just auto connect (using perfered resolution) using:
+xrandr --output HDMI-1 --auto
+
+-have 2 monitors:
+-use:..
+--right-of, --left-of, --above, --below options
+
+
+-can specify output(rate is not very important..):
+xrandr --output HDMI-1 --mode 1920x1080 --rate 60
+
+
+*********************
+ume
+*********************
+-installation paths:
+-- Install configuration: ""
+-- Installing: /usr/local/bin/ume
+-- Installing: /usr/local/share/applications/ume.desktop
+-- Installing: /usr/local/share/pixmaps/terminal-tango.svg
+-- Installing: /usr/local/share/doc/ume/INSTALL
+
+*********************
+ssh
+*********************
+ssh haiyang.he@linux.cpsc.ucalgary.ca
+
+scp <file> haiyang.he@linux.cpsc.ucalgary.ca:~
+
+-patching in github:
+https://stackoverflow.com/questions/34400885/how-can-i-remove-an-applied-git-patch
+
+-adding ssh for github:
+	-first switch the repo from https to ssh
+	-generate the key (the password you chose will be the password everytime you push)
+	-add the key into github
+	-make the key private by chmod 400 ~/.ssh/id_rsa
+
+-copy paste this into bashrc (only type password once)
+-https://unix.stackexchange.com/questions/90853/how-can-i-run-ssh-add-automatically-without-a-password-prompt
+
+if [ ! -S ~/.ssh/ssh_auth_sock ]; then
+  eval `ssh-agent`
+  ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
+fi
+export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+ssh-add -l > /dev/null || ssh-add
+
+*********************
+sxiv
+*********************
+- "<" and ">" to rotate
+- "?" to flip 180 degree
+- when viewing gifs, can press "Ctrl space" to play the gif, or add the "-a" option to autimatically play the gif
+
+*********************
+printing
+*********************
+-get avahi and cups.. remember to enable the daemons in systemctl
+
+-OPEN PRINTER FIRSTTTTTTTTTTTTTTT
+
+-to search the printers (not needed if have the system-config-printer installed):
+avahi-discover
+
+-install system-config-printer
+-select the Driverless(ipp/print) one!!
+-maybe do CUPS-PDF
+-for the device URL, make sure it is same as localhost:
+for example my address found in avahi is
+BRW1008B16D9E08.local/192.168.0.226:515
+
+-but we notice that the CUPS server is localhost:631
+-so we don't connect to the 192.168 (maybe you can but doing this worked for me)
+
+-so the address would then be :
+BRW1008B16D9E08.local:631
+-then, make sure the ipp URL is :
+ipp://BRW1008B16D9E08.local:631/ipp/print
+
+-then we are done! print test page ;)
+*********************
+logitech keyboard LED
+*********************
+-USE SUDOOOOO
+-to see all of the keys, do g610-led --help-keys
+then you will see all of the groups of keys
+-you can set the colors of groups of keys in /etc/g810-led/profile, which need to be hardcoded in
+
+-THE SETTING BELOW IS IN ~/.scripts/logitechLED.sh
+-if not, and you want to change all of the key brightness, just do g610-led -a <color in hexadecimal>
