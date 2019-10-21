@@ -8,5 +8,6 @@ xset b off
 xset b 0 0 0
 #setting the caps lock button as escape
 sudo setxkbmap -option caps:escape
+sudo modprobe psmouse
 #disable the stupid right click button on keyboard
 xmodmap -e "keycode 135 = VoidSymbol"
