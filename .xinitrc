@@ -50,16 +50,23 @@ fi
 
 
 exec fcitx &
+export GTK_IM_MODULE=fcitx
+
+#exec ibus-daemon -drx &
+#export GTK_IM_MODULE=ibus
+#export XMODIFIERS=@im=ibus
+#export QT_IM_MODULE=ibus
+
 xset m 3/2 0
 amixer -c 0 set Speaker 100%
 amixer -c 0 set Speaker unmute
-amixer -c 0 set Headphone 98%
-amixer -c 0 set Headphone unmute
+#amixer -c 0 set Headphone 98%
+#amixer -c 0 set Headphone unmute
 
 #sudo ~/.scripts/startup.sh &
 sudo ~/.scripts/keyboard.sh &
 #~/.scripts/lockscreen.sh &
-~/dwm-haiyang/dwm-bar/dwm_bar.sh &
+#~/dwm-haiyang/dwm-bar/dwm_bar.sh &
 
 #exec i3
 exec dwm
