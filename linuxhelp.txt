@@ -7,6 +7,32 @@ key failures during makepkg -si
 gpg --recv-keys <KEYID - See 'validpgpkeys' array in PKGBUILD>
 
 ---------------------
+key failures during pacman installation of 
+"signature from "Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>" is invalid"
+---------------------
+solve by doing: https://bbs.archlinux.org/viewtopic.php?id=233480
+
+pacman-key --delete 91FFE0700E80619CEB73235CA88E23E377514E00
+pacman-key --populate archlinux
+
+
+---------------------
+stupid amdgpu ....
+---------------------
+- to make amdgpus suspend properly, add "amd_iommu=off" in your kernel commmand line..
+
+---------------------
+disable USB 3.0 to prevent wakeup
+---------------------
+- to see the devices and states they are in:
+cat /proc/acpi/wakeup
+- the relavant devices are `EHC*` and `XHC*` for USB 3.0
+- to toggle their state you have to echo the device name to the file as root (ex:)
+echo XHC1 > /proc/acpi/wakeup
+- I have this script in my .scripts folder
+
+
+---------------------
 neovim
 ---------------------
 - neovim's vimrc is stored at ~/.config/nvim/init.vim
