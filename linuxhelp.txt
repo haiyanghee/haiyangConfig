@@ -19,7 +19,7 @@ pacman-key --populate archlinux
 ---------------------
 stupid amdgpu ....
 ---------------------
-- to make amdgpus suspend properly, add "amd_iommu=off" in your kernel commmand line..
+- to make amdgpus suspend properly, add "amd_iommu=off" on the "linux" line in your grub.cfg in your kernel commmand line..
 
 ---------------------
 disable USB 3.0 to prevent wakeup
