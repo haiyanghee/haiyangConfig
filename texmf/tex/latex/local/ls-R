@@ -4,6 +4,22 @@
 chngcntr
 chngcntr.sty
 codep.sty
+dsfont.sty
+dsrom10.mf
+dsrom10.tfm
+dsrom12.mf
+dsrom12.tfm
+dsrom8.mf
+dsrom8.tfm
+dsrom.mf
+dsromo.mf
+dsromu.mf
+dsss10.mf
+dsss10.tfm
+dsss12.mf
+dsss12.tfm
+dsss8.mf
+dsss8.tfm
 enumitem.sty
 examplep
 examplep.sty
@@ -13,8 +29,11 @@ fitch.sty
 import.sty
 ls-R
 subfiles.sty
+theoremref.sty
 titlesec
 titlesec.sty
+Udsrom.fd
+Udsss.fd
 verbfwr.sty
 
 ./chngcntr:

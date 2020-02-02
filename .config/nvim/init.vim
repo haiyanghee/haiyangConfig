@@ -2,6 +2,11 @@ call plug#begin('~/.local/share/nvim/plugged')
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'rhysd/vim-clang-format' 
 
+"vimtex
+Plug 'lervag/vimtex'
+
+Plug 'neomake/neomake'
+
 "LSP
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -34,10 +39,29 @@ Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
+let g:tex_flavor = 'latex'
+
+"start server 
+if empty(v:servername) && exists('*remote_startserver')
+  call remote_startserver('VIM')
+endif
+
+let g:vimtex_enabled=1 "enable vimtex
+let g:vimtex_quickfix_enabled=0
+let g:vimtex_view_method = 'zathura'
+let g:vimtex_compiler_callback_hooks = ['MyTestHook']
+function! MyTestHook(status)
+  echom a:status
+endfunction
+
+
+
+""augroup HiglightTODO
+""    autocmd!
+""    autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO', -1)
 
 
 syntax on
-
 set mouse=a
 set noswapfile
 set incsearch 
@@ -77,7 +101,7 @@ inoremap ( ()<esc>ha
 inoremap { {}<esc>ha
 inoremap {<cr> {<cr>}<esc>kA<cr><esc>cc
 inoremap [ []<esc>ha
-inoremap ' ''<esc>ha
+"inoremap ' ''<esc>ha
 inoremap " ""<esc>ha
 
 "modifying brackets
@@ -126,6 +150,9 @@ let g:LanguageClient_useFloatingHover=1
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#auto_complete_delay = 1
 set completeopt+=menuone,preview
+call deoplete#custom#var('omni', 'input_patterns', {
+      \ 'tex': g:vimtex#re#deoplete
+      \})
 
 " making the autocmpletion a bit more pleaseant
 autocmd CompleteDone * silent! pclose!
@@ -155,32 +182,46 @@ let g:echodoc#enable_at_startup = 1
 
 
 
+autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 
 
-autocmd VimResized * exe "normal \<c-w>="
+augroup filetypeAutoCommands
+    autocmd! filetypeAutoCommands
+
+    au VimResized * exe "normal \<c-w>="
+    
+    "set formatoptions-=cro " removes the shityy auto commenter
+    au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+    
+    " NOTE Using BufEnter might be a better idea because there are some cases where BufRead will not tigger
+    
+    au  VimResized * exe "normal \<c-w>="
 
 " tex
-autocmd BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
+    "au  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 " autocmd BufRead,BufEnter *.tex :!make
 
 " c++
-autocmd BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
+    au  BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
 
 " c
-autocmd BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim
+    au  BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim
 
 " haskell
-autocmd BufRead,BufEnter *.hs source ~/.config/nvim/init_haskell.vim
+    au  BufRead,BufEnter *.hs source ~/.config/nvim/init_haskell.vim
 
 " java
-autocmd BufRead,BufEnter *.java source ~/.config/nvim/init_java.vim
+    au  BufRead,BufEnter *.java source ~/.config/nvim/init_java.vim
 
 " md
-autocmd BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
+    au  BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
 
 " dwm compilation lol
-autocmd BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
-autocmd BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
+    au  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
+    au  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
+" update sxhkdrc
+    au  BufWritePost *sxhkdrc :!killall sxhkd; setsid  sxhkd &
+augroup END
 
 " vim
 "autocmd BufRead,BufEnter *. source ~/.vimrc

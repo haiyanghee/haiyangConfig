@@ -1,3 +1,3 @@
 #!/bin/bash
-sudo /bin/bash ~/.scripts/stopWifi.sh
-sudo /bin/bash ~/.scripts/connectToWifi.sh
+sudo /home/haiyang/.scripts/stopWifi.sh
+sudo /home/haiyang/.scripts/connectToWifi.sh
