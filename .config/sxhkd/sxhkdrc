@@ -1,6 +1,9 @@
 XF86Audio{Raise,Lower}Volume
-	amixer sset Master 2%{+,-}; pkill -SIGTRAP dwm_bar
+	    amixer sset Master 2%{+,-}; pkill -SIGTRAP dwm_bar
 XF86AudioMute
         amixer sset Master toggle; pkill -SIGTRAP dwm_bar
 XF86AudioMicMute
         amixer set Capture toggle; pkill -SIGTRAP dwm_bar
+
+super + s
+        ~/.scripts/sp.sh
