@@ -223,8 +223,8 @@ augroup filetypeAutoCommands
     au  BufWritePost *sxhkdrc :!killall sxhkd; setsid  sxhkd &
 augroup END
 
-autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
-autocmd  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
+"autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
+"autocmd  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
 
 " vim
 "autocmd BufRead,BufEnter *. source ~/.vimrc
