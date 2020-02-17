@@ -48,6 +48,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+#set cursor
+xsetroot -cursor_name left_ptr
 
 exec fcitx &
 export GTK_IM_MODULE=fcitx
@@ -62,9 +64,10 @@ amixer -c 0 set Speaker unmute
 
 #sudo ~/.scripts/startup.sh &
 sudo ~/.scripts/keyboard.sh &
-sudo ~/.scripts/reloadPsmouse.sh &
+#sudo ~/.scripts/reloadPsmouse.sh &
 #~/.scripts/lockscreen.sh &
 #~/dwm-haiyang/dwm-bar/dwm_bar.sh &
 
 #exec i3
 exec dwm
+#exec xmonad
