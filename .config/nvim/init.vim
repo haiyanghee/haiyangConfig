@@ -56,9 +56,9 @@ endfunction
 
 
 
-""augroup HiglightTODO
-""    autocmd!
-""    autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO', -1)
+augroup HiglightTODO
+    autocmd!
+    autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO', -1)
 
 
 syntax on
@@ -158,7 +158,7 @@ call deoplete#custom#var('omni', 'input_patterns', {
 autocmd CompleteDone * silent! pclose!
 autocmd InsertLeave * silent! pclose!
 
-autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
+"autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 set splitbelow
 
 "setting the paths to libclang, which was required for deoplete-clang
@@ -213,15 +213,18 @@ augroup filetypeAutoCommands
 " java
     au  BufRead,BufEnter *.java source ~/.config/nvim/init_java.vim
 
+" python
+    au  BufRead,BufEnter *.py source ~/.config/nvim/init_python.vim
+
 " md
     au  BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
 
-" dwm compilation lol
-    au  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
-    au  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
 " update sxhkdrc
     au  BufWritePost *sxhkdrc :!killall sxhkd; setsid  sxhkd &
 augroup END
+
+autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
+autocmd  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
 
 " vim
 "autocmd BufRead,BufEnter *. source ~/.vimrc
