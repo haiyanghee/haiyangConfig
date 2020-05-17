@@ -4,6 +4,9 @@ XF86AudioMute
         amixer sset Master toggle; pkill -SIGTRAP dwm_bar
 XF86AudioMicMute
         amixer set Capture toggle; pkill -SIGTRAP dwm_bar
-
 super + s
         ~/.scripts/sp.sh
+Print
+        scrot ~/Screenshots/%s_%H%M_%d.%m.%Y_$wx$h.png
+super + Print
+        scrot -u ~/Screenshots/%s_%H%M_%d.%m.%Y_$wx$h.png

@@ -148,7 +148,7 @@ let g:LanguageClient_useFloatingHover=1
 
 
 let g:deoplete#enable_at_startup = 1
-let g:deoplete#auto_complete_delay = 1
+"let g:deoplete#auto_complete_delay = 1
 set completeopt+=menuone,preview
 call deoplete#custom#var('omni', 'input_patterns', {
       \ 'tex': g:vimtex#re#deoplete
@@ -182,7 +182,7 @@ let g:echodoc#enable_at_startup = 1
 
 
 
-autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
+"autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 
 
 augroup filetypeAutoCommands
@@ -198,7 +198,7 @@ augroup filetypeAutoCommands
     au  VimResized * exe "normal \<c-w>="
 
 " tex
-    "au  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
+    au  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 " autocmd BufRead,BufEnter *.tex :!make
 
 " c++
@@ -220,7 +220,7 @@ augroup filetypeAutoCommands
     au  BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
 
 " update sxhkdrc
-    au  BufWritePost *sxhkdrc :!killall sxhkd; setsid  sxhkd &
+    au  BufWritePost *sxhkdrc :!killall sxhkd; sxhkd &
 augroup END
 
 "autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install

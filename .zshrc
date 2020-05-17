@@ -3,25 +3,35 @@
 #antigen bundle git
 #antigen bundle zsh-users/zsh-syntax-highlighting
 source ~/.antigen/bundles/zsh-users/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+fpath=(~/.antigen/bundles/zsh-users/zsh-completions/src $fpath)
 
 
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.cache/.zshhist
 HISTSIZE=1000
 SAVEHIST=1000
+
 setopt appendhistory nomatch
 unsetopt autocd beep extendedglob notify
+
 bindkey -e
 # End of lines configured by zsh-newuser-install
 
 # Basic auto/tab complete:
-autoload -U compinit
-zstyle ':completion:*' menu select
+autoload -U compinit #&& compinit
+
+autoload -U bashcompinit && bashcompinit
+
+zstyle ':completion:*' menu select matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=* r:|=*'
+
 zmodload zsh/complist
-compinit
+#compinit
 _comp_options+=(globdots)		# Include hidden files.
 
+
 autoload -U colors && colors
+
+
 #My old bashrc aliases
 #Run the git ssh bash script on startup
 source ~/.scripts/gitssh.sh
@@ -36,6 +46,11 @@ alias dmesg='dmesg --color'
 alias pacman="pacman --color=auto"
 
 alias sudo="sudo "
+
+function cd_up() {
+  cd $(printf "%0.s../" $(seq 1 $1 ));
+}
+alias 'cd..'='cd_up'
 
 #some useful shortcuts:
 alias getsong="youtube-dl -f bestaudio -o '~/Music/youtube/%(title)s.%(ext)s' --proxy \"\""	#get youtube song
