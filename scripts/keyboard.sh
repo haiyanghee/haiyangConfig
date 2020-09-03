@@ -6,6 +6,8 @@ xset r rate 320 23
 #sudo xset b 0 0 0
 xset b off
 xset b 0 0 0
+#mouse speed
+xset m 4/1 0
 #setting the caps lock button as escape
 #sudo setxkbmap -option caps:escape
 sudo modprobe psmouse
