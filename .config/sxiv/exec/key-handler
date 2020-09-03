@@ -27,7 +27,7 @@ fullpath="$(pwd)/$curPath"
 case "$1" in
 "C-y")      echo -n "$curPath" | xclip -in -filter | tr '\n' ' ' | xclip -in -selection clipboard;;	#copy file name
 "C-Y")      echo -n "$fullpath" | xclip -in -filter | tr '\n' ' ' | xclip -in -selection clipboard ;; #copy full path
-"C-w")      cp "$fullpath" ~/.config/wallpaper/ ; grep -v "wallpaper" ~/.zshrc > ~/.bashrc_backup&& mv ~/.bashrc_backup ~/.zshrc && echo -n "wallpaper=~/.config/wallpaper/$curPath" >> ~/.zshrc && feh --bg-max $fullpath;;
+"C-w")      cp "$fullpath" ~/.config/wallpaper/ ; grep -v "wallpaper" ~/.bashrc > ~/.bashrc_backup&& mv ~/.bashrc_backup ~/.bashrc && echo -n "wallpaper=~/.config/wallpaper/$curPath" >> ~/.bashrc && feh --bg-max $fullpath;;
 #"C-c")      while read file; do xclip -selection clipboard -target image/png "$file"; done ;;
 #"C-e")      while read file; do urxvt -bg "#444" -fg "#eee" -sl 0 -title "$file" -e sh -c "exiv2 pr -q -pa '$file' | less" & done ;;
 "C-g")      tr '\n' '\0' | xargs -0 gimp & ;;
