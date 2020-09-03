@@ -48,6 +48,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 
+source ~/.bashrc
+
 #set cursor
 xsetroot -cursor_name left_ptr
 
@@ -62,11 +64,19 @@ amixer -c 0 set Speaker unmute
 #amixer -c 0 set Headphone 98%
 #amixer -c 0 set Headphone unmute
 
-#sudo ~/.scripts/startup.sh &
-sudo ~/.scripts/keyboard.sh &
 #sudo ~/.scripts/reloadPsmouse.sh &
 #~/.scripts/lockscreen.sh &
-#~/dwm-haiyang/dwm-bar/dwm_bar.sh &
+#sudo ~/.scripts/disable-usb-trigger-wakeup.sh &
+sudo ~/.scripts/keyboard.sh &
+
+sudo ~/.scripts/hdmi-thinkpad.sh &
+sudo ~/.scripts/connectToWifi.sh &
+dwmblocks &
+feh --bg-max $wallpaper
+compton &
+~/.scripts/normalScreenSaverTimeout.sh &
+~/.scripts/redshiftopen.sh &
+
 
 #exec i3
 exec dwm
