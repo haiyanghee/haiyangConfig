@@ -17,7 +17,8 @@ Plug 'autozimu/LanguageClient-neovim', {
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 
-
+"will make vim to reload files that are saved but not edited..
+Plug 'djoshea/vim-autoread'
 
 "Deoplete
 if has('nvim')
@@ -48,6 +49,7 @@ endif
 
 let g:vimtex_enabled=1 "enable vimtex
 let g:vimtex_quickfix_enabled=0
+"let g:vimtex_compiler_progname = 'nvr'
 let g:vimtex_view_method = 'zathura'
 let g:vimtex_compiler_callback_hooks = ['MyTestHook']
 function! MyTestHook(status)
@@ -86,6 +88,13 @@ set termguicolors
 filetype on
 filetype indent on
 filetype plugin on
+
+"copy file name
+nnoremap cf :let @+=expand("%:t")<CR>
+nnoremap yf :let @"=expand("%:t")<CR>
+"copy file path
+nnoremap cF :let @+=expand("%:p")<CR>
+nnoremap yF :let @"=expand("%:p")<CR>
 
 nnoremap t :tabe<cr>:Ex<cr>
 nnoremap k gk
@@ -132,16 +141,19 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
-
+"view and reload vimrc
 nnoremap <Leader>sv: :source ~/.config/nvim/init.vim<cr>
 nnoremap <Leader>ev: :vsplit ~/.config/nvim/init.vim<cr>
+" use urlview
+"nnoremap <Leader>u :w<Home>slient <End> !urlview<CR>
+noremap <Leader>u :w<Home>silent <End> !urlview<CR>
 
 
 "LSP
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
 "nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-"nnoremap <silent> K :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> K :call LanguageClient#explainErrorAtPoint()<CR>
 nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
 let g:LanguageClient_useFloatingHover=1
@@ -188,6 +200,8 @@ let g:echodoc#enable_at_startup = 1
 augroup filetypeAutoCommands
     autocmd! filetypeAutoCommands
 
+    au  BufRead,BufEnter * checktime
+
     au VimResized * exe "normal \<c-w>="
     
     "set formatoptions-=cro " removes the shityy auto commenter
@@ -203,9 +217,11 @@ augroup filetypeAutoCommands
 
 " c++
     au  BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
+    au  BufRead,BufEnter *.hpp source ~/.config/nvim/init_cpp.vim
 
 " c
     au  BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim
+    au  BufRead,BufEnter *.h source ~/.config/nvim/init_cpp.vim
 
 " haskell
     au  BufRead,BufEnter *.hs source ~/.config/nvim/init_haskell.vim
@@ -221,6 +237,9 @@ augroup filetypeAutoCommands
 
 " update sxhkdrc
     au  BufWritePost *sxhkdrc :!killall sxhkd; sxhkd &
+
+    au BufWritePost ~/dwm-haiyang/*.h !sudo make clean install
+    au BufWritePost ~/dwm-haiyang/*.c !sudo make clean install
 augroup END
 
 "autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install

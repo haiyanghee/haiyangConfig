@@ -1,7 +1,8 @@
 let g:LanguageClient_serverCommands = {
   \ 'cpp': ['clangd'],
-  \ 'c': ['clangd'],
   \ }
+
+  "\ 'c': ['clangd'],
 
 let g:clang_format#auto_format = 1
 let g:clang_format#auto_format_on_insert_leave = 0
@@ -14,7 +15,7 @@ let g:clang_format#style_options = {
             \
             \"BasedOnStyle": "LLVM",
             \"Language": "Cpp",
-            \"IndentWidth": 4,
+            \"IndentWidth": 8,
             \"UseTab": "Always",
             \"BreakBeforeBraces": "Linux",
             \"AlwaysBreakBeforeMultilineStrings": "true",
@@ -31,4 +32,4 @@ let g:clang_format#style_options = {
             \"BreakBeforeBinaryOperators": "NonAssignment",
             \"BreakStringLiterals": "false",
             \"SortIncludes":    "false",
-            \"ContinuationIndentWidth": 4}
+            \"ContinuationIndentWidth": 8}
