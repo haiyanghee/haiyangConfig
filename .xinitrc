@@ -73,7 +73,9 @@ sudo ~/.scripts/hdmi-thinkpad.sh &
 sudo ~/.scripts/connectToWifi.sh &
 dwmblocks &
 feh --bg-max $wallpaper
-compton &
+# compton is replaced by picom now
+#compton &
+picom &
 ~/.scripts/normalScreenSaverTimeout.sh &
 ~/.scripts/redshiftopen.sh &
 
