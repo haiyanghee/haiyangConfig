@@ -231,9 +231,11 @@ wine
 -很多中国软件都可以在这里下: winetricks-zh  一般。。winetricks 
 - winetricks riched20 可以让微信看见自己打的字
 
+-微信下载： https://github.com/countstarlight/deepin-wine-wechat-arch (AUR: https://aur.archlinux.org/deepin-wine-wechat.git)
+-QQ下载：https://github.com/countstarlight/deepin-wine-qq-arch
+-TIM下载：https://github.com/countstarlight/deepin-wine-tim-arch
 
-
--微信在这个网站下载：https://aur.archlinux.org/packages/electronic-wechat/
+-微信网页版在这个网站下载：https://aur.archlinux.org/packages/electronic-wechat/
 -The above website might give you javascript errors, so try to download the tar on github: 
 https://github.com/kooritea/electronic-wechat
 the name would be <electronic-wechat-2.2.1.tar.gz>
@@ -246,6 +248,11 @@ OR
 npm install && npm start
 -then magic happens ;)
 
+
+-网易音乐：
+-sudo pacman -S netease-cloud-music
+
+(below is old links/instructions and does not work anymore:( )
 -腾讯QQ:
 -pacman -S wine
 安装TIM更好，因为QQ更新太慢。
@@ -257,9 +264,6 @@ npm install && npm start
 -then go to the installed path.. 
 --if installed from git, at the same directory type "sh run.sh" , then click install QUICKLYYY
 --if installed using pacman, go to /opt/deepinwine/apps/Deepin-TIM then type "sh run.sh"
-
--网易音乐：
--sudo pacman -S netease-cloud-music
 
 China proxy websites:
 -best one::::::::
