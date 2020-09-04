@@ -5,6 +5,7 @@ Plug 'rhysd/vim-clang-format'
 "vimtex
 Plug 'lervag/vimtex'
 
+"neomake
 Plug 'neomake/neomake'
 
 "LSP
@@ -237,9 +238,6 @@ augroup filetypeAutoCommands
 
 " update sxhkdrc
     au  BufWritePost *sxhkdrc :!killall sxhkd; sxhkd &
-
-    au BufWritePost ~/dwm-haiyang/*.h !sudo make clean install
-    au BufWritePost ~/dwm-haiyang/*.c !sudo make clean install
 augroup END
 
 "autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
