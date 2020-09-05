@@ -64,9 +64,9 @@ amixer -c 0 set Speaker unmute
 #amixer -c 0 set Headphone 98%
 #amixer -c 0 set Headphone unmute
 
-#sudo ~/.scripts/reloadPsmouse.sh &
 #~/.scripts/lockscreen.sh &
 #sudo ~/.scripts/disable-usb-trigger-wakeup.sh &
+sudo ~/.scripts/mouse.sh &
 sudo ~/.scripts/keyboard.sh &
 
 sudo ~/.scripts/hdmi-thinkpad.sh &
@@ -75,7 +75,7 @@ dwmblocks &
 feh --bg-max $wallpaper
 # compton is replaced by picom now
 #compton &
-picom &
+picom -CG&
 ~/.scripts/normalScreenSaverTimeout.sh &
 ~/.scripts/redshiftopen.sh &
 
