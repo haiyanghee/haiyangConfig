@@ -1,5 +1,5 @@
 #!/bin/bash
-/bin/bash /home/haiyang/.scripts/mouse.sh
+#/bin/bash /home/haiyang/.scripts/mouse.sh
 #setting the keyboard rate
 xset r rate 320 23
 #sudo xset b off
