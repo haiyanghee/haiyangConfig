@@ -3,7 +3,14 @@ To fix chromium border, go to `Settings` -> `Use system title bar and borders`
 
 To "enable" pdf scrolling with vimium, get PDF Viewer from chromium store.
 
-Also add dash to /bin/sh i guess?
+Also add dash to /bin/sh I guess?
+
+# Open links in Zathura issue
+Maybe you have encountered a issue where you want to open links in `zathura` but `xdg-open` just fails you, and at the end you will get "no method available for opening" some link. 
+
+Firstly, you should set a `BROWSER` variable in your `~/.bashrc`. I use chromium so I just did `export BROWSER="chromium"`. Then this is not enough for some reason (you will know it if you run `zathura` again, at least for me it didn't work). You should also add the line `set sandbox none` in your `zathurarc`, usually located at `~/.config/zathura/zathurarc`.
+
+It might also be good to use `xdg-setting` to set the default web-browser like `xdg-settings set default-web-browser chromium.desktop`, as mentioned in the [wiki](https://wiki.archlinux.org/index.php/Xdg-utils#xdg-open)
 
 # Emoji coverage
 install the following font packages from pacman (I don't recall which package actually fixes the problem but just install these there is no harm):
@@ -34,6 +41,25 @@ Section "InputClass"
 EndSection
 
 ```
+# Detecting Elantech trackpoint and touchpad
+Append the following kernel parameters to `/etc/default/grub`, at `GRUB_CMDLINE_LINUX_DEFAULT`:
+```
+i8042.nomux=1 i8042.reset
+```
+So an example parameter will look something like
+```
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet i8042.nomux=1 i8042.reset"
+```
+This should detect it... When you run `dmesg` you should be able to see that libinput recognizes the trackpoint and touchpad from `/devices/platform/i8042/...`
+
+For example:
+```
+$ dmesg | grep -i trackpoint
+[    2.522591] input: ETPS/2 Elantech TrackPoint as /devices/platform/i8042/serio1/input/input16
+$ dmesg | grep -i touchpad
+[    2.540001] input: ETPS/2 Elantech Touchpad as /devices/platform/i8042/serio1/input/input8
+```
+
 # Change trackpoint speed  (especially after disabling mouse acceleration)
 Based on https://wayland.freedesktop.org/libinput/doc/latest/device-quirks.html#installing-temporary-local-device-quirks, we need to create `/etc/libinput/local-overrides.quirks` file. 
 
@@ -50,7 +76,6 @@ MatchName=*Elantech TrackPoint
 MatchDMIModalias=dmi:*svnLENOVO:*:pvrThinkPadT495s:*
 AttrTrackpointMultiplier=2.6
 ```
-
 # AMDGPU
 Put this file in `/etc/X11/xorg.conf.d/20-amdgpu.conf`:
 ```
@@ -58,71 +83,6 @@ Section "Device"
     Identifier  "AMD Graphics" 
     Driver      "amdgpu"
     Option      "Backlight"  "amdgpu_bl0"
-EndSection
-
-```
-And maybe this file in `/usr/share/X11/xorg.conf.d/10-amdgpu.conf` (but this might be auto generated, I can't remember):
-```
-Section "OutputClass"
-	Identifier "AMDgpu"
-	MatchDriver "amdgpu"
-	Driver "amdgpu"
-EndSection
-```
-# Libinput conf?
-Maybe put this file in `/usr/share/X11/xorg.conf.d/40-libinput.conf` (might be auto generated):
-```
-# Match on all types of devices but joysticks
-#
-# If you want to configure your devices, do not copy this file.
-# Instead, use a config snippet that contains something like this:
-#
-# Section "InputClass"
-#   Identifier "something or other"
-#   MatchDriver "libinput"
-#
-#   MatchIsTouchpad "on"
-#   ... other Match directives ...
-#   Option "someoption" "value"
-# EndSection
-#
-# This applies the option any libinput device also matched by the other
-# directives. See the xorg.conf(5) man page for more info on
-# matching devices.
-
-Section "InputClass"
-        Identifier "libinput pointer catchall"
-        MatchIsPointer "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput keyboard catchall"
-        MatchIsKeyboard "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput touchpad catchall"
-        MatchIsTouchpad "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput touchscreen catchall"
-        MatchIsTouchscreen "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
-EndSection
-
-Section "InputClass"
-        Identifier "libinput tablet catchall"
-        MatchIsTablet "on"
-        MatchDevicePath "/dev/input/event*"
-        Driver "libinput"
 EndSection
 
 ```
