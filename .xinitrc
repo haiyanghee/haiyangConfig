@@ -66,7 +66,7 @@ amixer -c 0 set Speaker unmute
 
 #~/.scripts/lockscreen.sh &
 #sudo ~/.scripts/disable-usb-trigger-wakeup.sh &
-sudo ~/.scripts/mouse.sh &
+#sudo ~/.scripts/mouse.sh &
 sudo ~/.scripts/keyboard.sh &
 
 sudo ~/.scripts/hdmi-thinkpad.sh &
