@@ -141,6 +141,8 @@ export VISUAL="vim"
 #only show 3 dir depth so your screen does not get overwhelmed with paths..
 export PROMPT_DIRTRIM=3
 
+export BROWSER="chromium"
+
 # Git stuff
 if [[ $PS1 && -f /usr/share/git/git-prompt.sh ]]; then
     source /usr/share/git/git-prompt.sh
