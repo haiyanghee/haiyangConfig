@@ -57,7 +57,7 @@ Server = https://mirrors.ustc.edu.cn/archlinuxcn/$arch
 -should get grub for bootloader, and create /boot/efi and mount it there
 - firstly mount the /boot/efi ..
 - then do the commands on the wiki, and then grub-install
-- since we need to duoboot, need to install os-prober and ntfs-3g and dislocker then mount the windows bootloader, then remake grubconfig.. 
+- since we need to duoboot, need to install os-prober and ntfs-3g and (maybe dislocker) then mount the windows bootloader, then remake grubconfig.. 
 - to create the grub.cfg use
  grub-mkconfig -o /boot/grub/grub.cfg
 
