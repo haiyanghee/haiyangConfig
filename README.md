@@ -5,6 +5,14 @@ To "enable" pdf scrolling with vimium, get PDF Viewer from chromium store.
 
 Also add dash to /bin/sh I guess?
 
+# Language client serverCommands autocmd/autogroup
+If you want to source different .vim configs for different file types, you need to add `BufReadPre`, like:
+
+```
+au  BufReadPre,BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
+```
+This way `g:LanguageClient_serverCommands` will get sourced in before it starts so that the language client actually runs.
+
 # Open links in Zathura issue
 Maybe you have encountered a issue where you want to open links in `zathura` but `xdg-open` just fails you, and at the end you will get "no method available for opening" some link. 
 
