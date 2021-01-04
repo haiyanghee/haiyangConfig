@@ -57,6 +57,7 @@ exec fcitx &
 export GTK_IM_MODULE=fcitx
 
 sxhkd &
+#udiskie --tray& #automatically mount usb! very cool
 
 xset m 3/2 0
 amixer -c 0 set Speaker 100%
@@ -82,4 +83,5 @@ picom -CG&
 
 #exec i3
 exec dwm
+#exec ~/.scripts/startDwm.sh
 #exec xmonad
