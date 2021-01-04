@@ -13,8 +13,8 @@ xsetwacom set $(echo $tabletnum | awk '{ print $2}') MapToOutput HDMI-A-0
 xsetwacom set "HUION Huion Tablet Pad pad" Button 1 "key ctrl z" 
 xsetwacom set "HUION Huion Tablet Pad pad" Button 2 "key shift ctrl E" #easer tool
 xsetwacom set "HUION Huion Tablet Pad pad" Button 3 "key shift ctrl P" #pen tool
-xsetwacom set "HUION Huion Tablet Pad pad" Button 8 "key ctrl 0xffab " #zoom in
-xsetwacom set "HUION Huion Tablet Pad pad" Button 9 "key ctrl 0xffad " #zoom out
+xsetwacom set "HUION Huion Tablet Pad pad" Button 8 "key ctrl +0xffab " #zoom in
+xsetwacom set "HUION Huion Tablet Pad pad" Button 9 "key ctrl +0xffad " #zoom out
 xsetwacom set "HUION Huion Tablet Pad pad" Button 10 "key shift ctrl H " #highlighter
-xsetwacom set "HUION Huion Tablet Pad pad" Button 11 "key shift ctrl R " #rectangle selection
-xsetwacom set "HUION Huion Tablet Pad pad" Button 12 "key shift ctrl A " #rectangle selection
+xsetwacom set "HUION Huion Tablet Pad pad" Button 11 "key shift ctrl G " #region selection
+xsetwacom set "HUION Huion Tablet Pad pad" Button 12 "key shift ctrl A " #hand tool
