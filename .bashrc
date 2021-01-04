@@ -103,6 +103,7 @@ alias 'cd..'='cd_up'
 alias getsong="youtube-dl -f bestaudio -o '~/Music/youtube/%(title)s.%(ext)s' --proxy \"\""	#get youtube song
 alias youtube-dl="youtube-dl --proxy \"\""
 alias dim="echo 53 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
+alias halfdim="echo 80 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
 alias bright="echo 255 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
 alias zathura="zathura --fork"
 alias lock="~/config/lockscreen.sh"
@@ -142,6 +143,11 @@ export VISUAL="vim"
 export PROMPT_DIRTRIM=3
 
 export BROWSER="chromium"
+
+#wine that uses deepin 5 (maybe not need? but for now its good)
+export WINEDLLPATH=/usr/lib/i386-linux-gnu/deepin-wine5
+export WINELOADER=/usr/lib/i386-linux-gnu/deepin-wine5/wine
+export WINESERVER=/usr/lib/i386-linux-gnu/deepin-wine5/wineserver
 
 # Git stuff
 if [[ $PS1 && -f /usr/share/git/git-prompt.sh ]]; then
