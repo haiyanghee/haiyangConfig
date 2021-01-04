@@ -15,7 +15,7 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ }
 
 
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 
 "will make vim to reload files that are saved but not edited..
@@ -30,6 +30,9 @@ Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+"python3 support for deoplete:
+"pip3 install --user pynvim
+
 "Deoplete for clang 
 "Plug 'zchee/deoplete-clang'
 
@@ -37,7 +40,7 @@ endif
 Plug 'Shougo/echodoc.vim'
 
 "Vim table mode
-Plug 'dhruvasagar/vim-table-mode'
+"Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
@@ -58,10 +61,16 @@ function! MyTestHook(status)
 endfunction
 
 
-
 augroup HiglightTODO
     autocmd!
     autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO', -1)
+
+if &term =~ '256color'
+    " disable Background Color Erase (BCE) so that color schemes
+    " render properly when inside 256-color tmux and GNU screen.
+    " see also https://sunaku.github.io/vim-256color-bce.html
+    set t_ut=y
+endif
 
 
 syntax on
@@ -80,11 +89,20 @@ set autoread
 set ignorecase
 set smartcase
 set background=dark
+
 colorscheme dracula
+
 hi! Normal ctermbg=NONE guibg=NONE
+hi! Visual guibg=#303240
+"hi! NonText ctermbg=NONE guibg=NONE
+"hi! Cursor guibg=white guifg=black
 set cursorline
-set guicursor=
+"set guicursor=
 set termguicolors
+
+set path+=**
+set wildmenu
+set hidden "allows switching buffers without saving
 
 filetype on
 filetype indent on
@@ -151,6 +169,12 @@ noremap <Leader>u :w<Home>silent <End> !urlview<CR>
 
 
 "LSP
+let g:LanguageClient_autoStart = 1
+"let g:LanguageClient_trace = 'verbose'
+"let $RUST_BACKTRACE = 'full'
+"let g:LanguageClient_loggingLevel = 'INFO'
+"let g:LanguageClient_loggingFile = '/tmp/languageclient-neovim.log'
+"let g:LanguageClient_serverStderr = '/tmp/clangd.stderr'
 nnoremap <F5> :call LanguageClient_contextMenu()<CR>
 " Or map each action separately
 "nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
@@ -197,7 +221,6 @@ let g:echodoc#enable_at_startup = 1
 
 "autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 
-
 augroup filetypeAutoCommands
     autocmd! filetypeAutoCommands
 
@@ -213,28 +236,28 @@ augroup filetypeAutoCommands
     au  VimResized * exe "normal \<c-w>="
 
 " tex
-    au  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
+    au  BufReadPre,BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 " autocmd BufRead,BufEnter *.tex :!make
 
 " c++
-    au  BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
-    au  BufRead,BufEnter *.hpp source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.hpp source ~/.config/nvim/init_cpp.vim
 
 " c
-    au  BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim
-    au  BufRead,BufEnter *.h source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.h source ~/.config/nvim/init_cpp.vim
 
 " haskell
-    au  BufRead,BufEnter *.hs source ~/.config/nvim/init_haskell.vim
+    au  BufReadPre,BufRead,BufEnter *.hs source ~/.config/nvim/init_haskell.vim
 
 " java
-    au  BufRead,BufEnter *.java source ~/.config/nvim/init_java.vim
+    au  BufReadPre,BufRead,BufEnter *.java source ~/.config/nvim/init_java.vim
 
 " python
-    au  BufRead,BufEnter *.py source ~/.config/nvim/init_python.vim
+    au  BufReadPre,BufRead,BufEnter *.py source ~/.config/nvim/init_python.vim
 
 " md
-    au  BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
+    au  BufReadPre,BufRead,BufEnter *.md source ~/.config/nvim/init_md.vim
 
 " update sxhkdrc
     au  BufWritePost *sxhkdrc :!killall sxhkd; sxhkd &

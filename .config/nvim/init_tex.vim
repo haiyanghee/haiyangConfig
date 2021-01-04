@@ -13,7 +13,8 @@ set inde=
 augroup texAutoCommands
     autocmd! texAutoCommands
     " autocompile when saving
-    au BufWritePost * :!pdflatex -halt-on-error % 
+    "au BufWritePost * :!latexmk -pdf % 
+    au BufWritePost * :!make
 augroup END
 
 nnoremap <Leader>pdf :!zathura --fork %<.pdf<cr>
