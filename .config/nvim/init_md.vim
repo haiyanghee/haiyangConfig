@@ -1,2 +1,4 @@
 set spell
-:set expandtab
+set expandtab
+inoremap * **<esc>ha
+inoremap ` ``<esc>ha

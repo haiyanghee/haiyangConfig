@@ -1,5 +1,6 @@
 #!/bin/bash
-str=$(xcwd)
+#str=$(xcwd)
 #echo $str
-#st -d `xcwd`
-st -d "$str"
+#st -d "$str"
+
+st -d "$(xcwd)"

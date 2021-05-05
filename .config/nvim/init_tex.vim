@@ -1,9 +1,17 @@
 "------------------------------
 "	latex stuff
 "------------------------------
+
+call deoplete#custom#var('omni', 'input_patterns', {
+          \ 'tex': g:vimtex#re#deoplete
+          \})
+
 " spel checking
 setlocal spell
 inoremap $ $$<esc>ha
+
+nnoremap <buffer>k gk
+nnoremap <buffer>j gj
 
 "remove weird indent
 set inde=

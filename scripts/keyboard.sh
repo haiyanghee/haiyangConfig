@@ -12,4 +12,4 @@ xset m 4/1 0
 #sudo setxkbmap -option caps:escape
 sudo modprobe psmouse
 #disable the stupid right click button on keyboard
-xmodmap -e "keycode 135 = VoidSymbol"
+xmodmap -e "keycode 135 = NoSymbol"
