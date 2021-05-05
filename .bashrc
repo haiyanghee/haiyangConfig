@@ -111,7 +111,7 @@ alias la="ls -la"
 alias ll='ls -l'
 alias l='ls -CF'
 alias ume='ume "cd `xcwd`"'
-alias sshUC="ssh haiyang.he@linux.cpsc.ucalgary.ca -Y"
+alias sshUC="ssh haiyang.he@linuxlab.cpsc.ucalgary.ca -Y"
 alias sshUCARM="ssh haiyang.he@arm.cpsc.ucalgary.ca -Y"
 alias udiskmount="udisksctl mount -b "
 alias udiskunmount="udisksctl unmount -b "
@@ -138,13 +138,14 @@ alias bad='git add . && git commit -m "${badresponse[$(($RANDOM % ${#badresponse
 #set keymap vi-command
 #set -o vi
 #when press 'v' in normal mode, it will bring you to a editor to edit the command, then save quit to run the command..
-export VISUAL="vim"
+export VISUAL="nvim"
 #only show 3 dir depth so your screen does not get overwhelmed with paths..
 export PROMPT_DIRTRIM=3
 
 export BROWSER="chromium"
 
 #wine that uses deepin 5 (maybe not need? but for now its good)
+export WINEPREFIX="$HOME/.deepinwine/Deepin-WeChat"
 export WINEDLLPATH=/usr/lib/i386-linux-gnu/deepin-wine5
 export WINELOADER=/usr/lib/i386-linux-gnu/deepin-wine5/wine
 export WINESERVER=/usr/lib/i386-linux-gnu/deepin-wine5/wineserver
