@@ -54,6 +54,11 @@ Also according to the [wiki](https://wiki.archlinux.org/index.php/PulseAudio/Tro
 load-module module-udev-detect tsched=0
 ```
 
+# How to see how much memory a process is taking
+You can get `ps_mem` (the [github page](https://github.com/pixelb/ps_mem)) and see example usages.
+
+For example, you can do `sudo ps_mem -p $(pgrep -d, chromium)` to see how much memory chromium is taking
+
 # Open links in Zathura issue
 Maybe you have encountered a issue where you want to open links in `zathura` but `xdg-open` just fails you, and at the end you will get "no method available for opening" some link. 
 
