@@ -12,6 +12,8 @@ Plug 'neomake/neomake'
 "Plug 'dansomething/vim-eclim'
 
 Plug 'mfussenegger/nvim-jdtls'
+"Syntax highlighting for magma
+Plug 'petRUShka/vim-magma'
 
 "vim git stuff
 Plug 'tpope/vim-fugitive'
@@ -35,7 +37,7 @@ Plug 'nvim-telescope/telescope.nvim'
 "will make vim to reload files that are saved but not edited..
 Plug 'djoshea/vim-autoread'
 
-Plug 'nvim-lua/completion-nvim'
+"Plug 'nvim-lua/completion-nvim'
 
 "Deoplete
 if has('nvim')
@@ -86,9 +88,6 @@ function! MyTestHook(status)
 endfunction
 
 
-augroup HiglightTODO
-    autocmd!
-    autocmd WinEnter,VimEnter * :silent! call matchadd('Todo', 'TODO', -1)
 
 if &term =~ '256color'
     " disable Background Color Erase (BCE) so that color schemes
@@ -118,14 +117,15 @@ set background=dark
 colorscheme dracula
 
 hi! Normal ctermbg=NONE guibg=NONE
-hi! Visual guibg=#64666D
+"hi! Visual guibg=#64666D
+
 "hi! Visual guibg=#70727A
-"hi! Visual guibg=#61636C
 "hi! Visual guibg=#56596A
 "hi! NonText ctermbg=NONE guibg=NONE
 "hi! Cursor guibg=white guifg=black
 "set cursorline
 "set guicursor=
+"hi! MatchParen  guibg=darkgreen
 set termguicolors
 
 set path+=**
@@ -149,6 +149,7 @@ nnoremap yF :let @"=expand("%:p")<CR>
 nnoremap t :tabe<cr>:Ex<cr>
 "nnoremap k gk
 "nnoremap j gj
+
 nnoremap <C-h> <C-w> h
 nnoremap <C-j> <C-w> j
 nnoremap <C-k> <C-w> k
@@ -225,17 +226,15 @@ let g:table_mode_corner='|'
 "Turns off deoplete completion in telescope prompt
 autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
 
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+"nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').file_browser()<cr>
+"nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 "Deoplete
 let g:deoplete#enable_at_startup = 1
 set completeopt+=menuone,preview
-call deoplete#custom#var('omni', 'input_patterns', {
-      \ 'tex': g:vimtex#re#deoplete
-      \})
 
 "defx settings
 autocmd FileType defx call s:defx_my_settings()
@@ -332,7 +331,8 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
@@ -344,15 +344,17 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts) -- not supported by clang yet
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-  buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
-  -- buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+  -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
+   buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+  -- buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_range_code_actions()<CR>", opts)
+   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap('n', '<leader>ds', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
-  --buf_set_keymap('n', '<leader>ws', "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
-  buf_set_keymap('n', '<leader>ws', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<CR>", opts)
+  -- buf_set_keymap('n', '<leader>ws', "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
+  buf_set_keymap('n', '<leader>ws', "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", opts)
 
   -- clang header open in vsplit (see below)
   buf_set_keymap('n', '<leader>h', '<cmd>:ClangdSwitchSourceHeaderVSplit<CR>', opts)
@@ -365,20 +367,17 @@ local on_attach = function(client, bufnr)
     buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
 
-  -- Set autocommands conditional on server_capabilities
-  --if client.resolved_capabilities.document_highlight then
-  --  vim.api.nvim_exec([[
-  --    hi LspReferenceRead  cterm=bold ctermbg=red guibg=LightBlue
-  --    hi LspReferenceText  cterm=bold ctermbg=red guibg=LightBlue
-  --    hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightBlue
-  --    augroup lsp_document_highlight
-  --      autocmd! * <buffer>
-  --      autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-  --      autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-  --      autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-  --    augroup END
-  --  ]], false)
-  --end
+    --Set autocommands conditional on server_capabilities
+  if client.resolved_capabilities.document_highlight then
+    vim.api.nvim_exec([[
+      augroup lsp_document_highlight
+        autocmd! * <buffer>
+        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+    ]], false)
+  end
 end
 
 
@@ -386,7 +385,7 @@ end
 -- and map buffer local keybindings when the language server attaches
  local servers = { "pyright", "rust_analyzer", "tsserver" }
  for _, lsp in ipairs(servers) do
-   nvim_lsp[lsp].setup { on_attach = on_attach }
+   nvim_lsp[lsp].setup { on_attach = on_attach, }
  end
 
 
@@ -401,24 +400,26 @@ local function switch_source_header_splitcmd(bufnr, splitcmd)
     end)
 end
 
+
    nvim_lsp.clangd.setup { on_attach = on_attach,
-       commands = {
-    	ClangdSwitchSourceHeader = {
-    		function() switch_source_header_splitcmd(0, "edit") end;
-    		description = "Open source/header in current buffer";
-    	},
-    	ClangdSwitchSourceHeaderVSplit = {
-    		function() switch_source_header_splitcmd(0, "vsplit") end;
-    		description = "Open source/header in a new vsplit";
-    	},
-    	ClangdSwitchSourceHeaderSplit = {
-    		function() switch_source_header_splitcmd(0, "split") end;
-    		description = "Open source/header in a new split";
-    	}
+        commands = {
+    	    ClangdSwitchSourceHeader = {
+                function() switch_source_header_splitcmd(0, "edit") end;
+                description = "Open source/header in current buffer";
+            },
+            ClangdSwitchSourceHeaderVSplit = {
+                function() switch_source_header_splitcmd(0, "vsplit") end;
+                description = "Open source/header in a new vsplit";
+            },
+            ClangdSwitchSourceHeaderSplit = {
+                function() switch_source_header_splitcmd(0, "split") end;
+                description = "Open source/header in a new split";
+            }
     }
    }
 EOF
 
+"For comment highlighting (such as TODO, FIXME, ... ) install the `comment` parser!
 lua <<EOF
 require'nvim-treesitter.configs'.setup {
     highlight = {
@@ -427,7 +428,6 @@ require'nvim-treesitter.configs'.setup {
     },
 }
 EOF
-
 
 
 " making the autocmpletion a bit more pleaseant
@@ -439,32 +439,14 @@ set updatetime=1000
 "autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 set splitbelow
 
-"autocmd BufEnter * lua require'completion'.on_attach()
-"set completeopt+=menuone,noinsert,noselect,preview
-"let g:completion_matching_strategy_list=['exact', 'substring', 'fuzzy']
-"inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-"set shortmess+=c
-
 "setting the paths to libclang, which was required for deoplete-clang
 "let g:deoplete#sources#clang#libclang_path = '/lib/libclang.so'
 "let g:deoplete#sources#clang#clang_header = '/lib/clang'
-
+ " path to directory where library can be found
 
 "set cmdheight=2
 "set noshowmode
 "let g:echodoc#enable_at_startup = 1
-
-
-"enable  tab stuff
-"inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-"For greenlet problem, just do the following:
-"pip3 uninstall pynvim
-"cd ~/.local/lib/python3.7/site-packages/
-"rm -r greenlet-0.4.15-py3.7.egg-info greenlet.cpython-37m-x86_64-linux-gnu.so
-"pip3 install --user --no-binary :all: pynvim
-
 
 
 "autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
@@ -513,6 +495,7 @@ augroup END
 
 "autocmd  BufWritePost ~/dwm-haiyang/*.h :!sudo make clean install
 "autocmd  BufWritePost ~/dwm-haiyang/*.c :!sudo make clean install
+autocmd  BufWritePost *.Xresources :!xrdb .Xresources
 
 " vim
 "autocmd BufRead,BufEnter *. source ~/.vimrc
