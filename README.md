@@ -5,6 +5,13 @@ To "enable" pdf scrolling with vimium, get PDF Viewer from chromium store.
 
 Also add dash to /bin/sh I guess?
 
+
+# Qutebrowser handling xdg-open?
+You can check the default application for MIME by running `env XDG_UTILS_DEBUG_LEVEL=10  xdg-mime query default text/html` (as stated in [Arch wiki](https://wiki.archlinux.org/title/Xdg-utils)). 
+
+Based on this [github issue](https://github.com/qutebrowser/qutebrowser/issues/22), the qutebrowser desktop file is named as `org.qutebrowser.qutebrowser.desktop`, which can be found at `ls /usr/share/applications/ | grep qutebrowser`. 
+Then to set qutebrowser as default browser we use `xdg-settings`, but we first need to unset the `$BROWSER` variable in bashrc (then set it again later). Then run `xdg-settings set default-web-browser org.qutebrowser.qutebrowser.desktop` and it is done.
+
 # Java LSP
 Install `jdtls` first. If you use archlinux, then jdtls will be installed in `/usr/share/java/jdtls`.
 Then create the following script in a directory like `/usr/local/bin/jdtls`:
