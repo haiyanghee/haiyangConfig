@@ -17,3 +17,7 @@ hyperelliptic
 unramified
 monic
 Karatsuba
+linearized
+linearizable
+linearizability
+shader

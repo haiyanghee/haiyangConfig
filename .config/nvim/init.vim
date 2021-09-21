@@ -3,6 +3,7 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'rhysd/vim-clang-format' 
 
 "vimtex
+"
 Plug 'lervag/vimtex'
 
 "neomake
@@ -18,12 +19,6 @@ Plug 'petRUShka/vim-magma'
 "vim git stuff
 Plug 'tpope/vim-fugitive'
 
-"LSP
-"Plug 'autozimu/LanguageClient-neovim', {
-"    \ 'branch': 'next',
-"    \ 'do': 'bash install.sh',
-"    \ }
-
 Plug 'neovim/nvim-lspconfig'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}  " We recommend updating the parsers on update
@@ -37,16 +32,22 @@ Plug 'nvim-telescope/telescope.nvim'
 "will make vim to reload files that are saved but not edited..
 Plug 'djoshea/vim-autoread'
 
-"Plug 'nvim-lua/completion-nvim'
+""Plug 'plasticboy/vim-markdown'
 
+""Plug 'nvim-lua/completion-nvim'
+""Plug 'steelsojka/completion-buffers'
+
+Plug 'hrsh7th/nvim-compe'
+
+" TODO : can try ncm2 for maybe faster performance?
 "Deoplete
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-Plug 'Shougo/deoplete.nvim'
-Plug 'roxma/nvim-yarp'
-Plug 'roxma/vim-hug-neovim-rpc'
-endif
+""if has('nvim')
+""  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+""else
+""Plug 'Shougo/deoplete.nvim'
+""Plug 'roxma/nvim-yarp'
+""Plug 'roxma/vim-hug-neovim-rpc'
+""endif
 
 if has('nvim')
   Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -56,36 +57,34 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-Plug 'deoplete-plugins/deoplete-lsp'
+""Plug 'deoplete-plugins/deoplete-lsp'
 
-"python3 support for deoplete:
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+
+""Plug 'Shougo/neosnippet.vim'
+""Plug 'Shougo/neosnippet-snippets'
+
+
+"python3 support for neovim:
 "pip3 install --user pynvim
-
-"Deoplete for clang 
-"Plug 'zchee/deoplete-clang'
-
-" echodoc (shows you the function arguments..)
-"Plug 'Shougo/echodoc.vim'
 
 "Vim table mode
 Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
-let g:tex_flavor = 'latex'
-"start server 
-if empty(v:servername) && exists('*remote_startserver')
-  call remote_startserver('VIM')
-endif
-
-let g:vimtex_enabled=1 "enable vimtex
-let g:vimtex_quickfix_enabled=0
-"let g:vimtex_compiler_progname = 'nvr'
+"enable vimtex
+let g:vimtex_enabled=1 
+let g:vimtex_quickfix_enabled=1
 let g:vimtex_view_method = 'zathura'
-let g:vimtex_compiler_callback_hooks = ['MyTestHook']
-function! MyTestHook(status)
-  echom a:status
-endfunction
+let g:vimtex_compiler_progname = 'nvr'
+let g:tex_flavor = 'latex'
+let g:vimtex_quickfix_ignore_filters = [
+      \ 'Warning',
+      \ 'Underfull',
+      \ 'Overfull',
+      \]
 
 
 
@@ -106,6 +105,8 @@ set encoding=utf-8
 set backspace=indent,eol,start
 set hlsearch
 set number
+"relative line numbers on all files!
+set relativenumber
 set laststatus=2
 set ruler
 set tabstop=4 shiftwidth=4 expandtab
@@ -136,6 +137,12 @@ filetype on
 filetype indent on
 filetype plugin on
 
+"open links correctly with gx
+nnoremap <silent> gx :execute 'silent! !xdg-open ' . shellescape(expand('<cWORD>'), 1)<cr>
+
+"change buffer directory
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
 "visually select text
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
@@ -146,14 +153,22 @@ nnoremap yf :let @"=expand("%:t")<CR>
 nnoremap cF :let @+=expand("%:p")<CR>
 nnoremap yF :let @"=expand("%:p")<CR>
 
-nnoremap t :tabe<cr>:Ex<cr>
+"open quickfix list
+nnoremap <C-q> :copen<CR>
+nnoremap <C-j> :cnext<CR>zz
+nnoremap <C-k> :cprev<CR>zz
+nnoremap <leader>j :lnext<CR>zz
+nnoremap <leader>k :lprev<CR>zz
+
+nnoremap <Leader>te :tabe<cr>:Ex<cr>
+nnoremap <silent> <Leader>tc :tabclose<cr>
 "nnoremap k gk
 "nnoremap j gj
 
-nnoremap <C-h> <C-w> h
-nnoremap <C-j> <C-w> j
-nnoremap <C-k> <C-w> k
-nnoremap <C-l> <C-w> l
+""nnoremap <C-h> <C-w> h
+""nnoremap <C-j> <C-w> j
+""nnoremap <C-k> <C-w> k
+""nnoremap <C-l> <C-w> l
 map <C-c> "+y<CR>
 
 "bracket completion
@@ -175,6 +190,10 @@ noremap <Leader>< ci<
 noremap <Leader>> ci>
 noremap <Leader>' ci'
 noremap <Leader>' ci"
+
+" set neovim's current directory to what I'm using  in terminal buffer shitty
+" solution but works: https://www.reddit.com/r/neovim/comments/7fafxv/set_neovims_current_directory_to_the_one_im_using/
+tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
 
 "To map <Esc> to exit terminal-mode:
 tnoremap <Esc> <C-\><C-n>
@@ -200,41 +219,29 @@ nnoremap <Leader>ev: :vsplit ~/.config/nvim/init.vim<cr>
 noremap <Leader>u :w<Home>silent <End> !urlview<CR>
 
 
-"LSP
-"let g:LanguageClient_autoStart = 1
-"let g:LanguageClient_trace = 'verbose'
-"let $RUST_BACKTRACE = 'full'
-"let g:LanguageClient_loggingLevel = 'INFO'
-"let g:LanguageClient_loggingFile = '/tmp/languageclient-neovim.log'
-"let g:LanguageClient_serverStderr = '/tmp/clangd.stderr'
-
-"nnoremap <F5> :call LanguageClient_contextMenu()<CR>
-
-" Or map each action separately
-"nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-
-"nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-"nnoremap <silent> K :call LanguageClient#explainErrorAtPoint()<CR>
-"nnoremap <silent> <F2> :call LanguageClient#textDocument_rename()<CR>
-"let g:LanguageClient_useFloatingHover=1
-
 "table mode compatibility with markdown
 let g:table_mode_corner='|'
 
 
 "Telescope
 "Turns off deoplete completion in telescope prompt
-autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
+""autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
 
 "nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 nnoremap <leader>ff <cmd>lua require('telescope.builtin').file_browser()<cr>
-"nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+
+nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
+nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
 nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
+
 "Deoplete
-let g:deoplete#enable_at_startup = 1
-set completeopt+=menuone,preview
+""let g:deoplete#enable_at_startup = 1
+"""when you press enter it will complete function args (when in lsp) with
+"""vsnip/neosnippet !
+"""imap <expr><CR> pumvisible() ? deoplete#close_popup() : "\<CR>"
+""set completeopt+=menuone,preview
 
 "defx settings
 autocmd FileType defx call s:defx_my_settings()
@@ -305,6 +312,8 @@ endfunction
 
 autocmd BufWritePost * call defx#redraw()
 
+"lsp active parameter highlight
+hi! link LspSignatureActiveParameter DraculaGreenItalicUnderline
 
 "lsp settings
 lua << EOF
@@ -321,6 +330,7 @@ function PeekDefinition()
   return vim.lsp.buf_request(0, 'textDocument/definition', params, preview_location_callback)
 end
 
+
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -335,7 +345,7 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
-  buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+  -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
@@ -348,6 +358,9 @@ local on_attach = function(client, bufnr)
    buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
   -- buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_range_code_actions()<CR>", opts)
    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+
+  buf_set_keymap('n', '<leader>dd', "<cmd>lua require('telescope.builtin').lsp_document_diagnostics()<CR>", opts)
+  buf_set_keymap('n', '<leader>wd', "<cmd>lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
@@ -381,12 +394,14 @@ local on_attach = function(client, bufnr)
 end
 
 
+
 -- Use a loop to conveniently both setup defined servers 
 -- and map buffer local keybindings when the language server attaches
- local servers = { "pyright", "rust_analyzer", "tsserver" }
- for _, lsp in ipairs(servers) do
-   nvim_lsp[lsp].setup { on_attach = on_attach, }
- end
+
+--  local servers = { "pyright", "rust_analyzer", "tsserver" }
+--  for _, lsp in ipairs(servers) do
+--    nvim_lsp[lsp].setup { on_attach = on_attach, }
+--  end
 
 
  -- to open header file as a vsplit
@@ -400,8 +415,18 @@ local function switch_source_header_splitcmd(bufnr, splitcmd)
     end)
 end
 
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+capabilities.textDocument.completion.completionItem.resolveSupport = {
+  properties = {
+    'documentation',
+    'detail',
+    'additionalTextEdits',
+  }
+}
 
-   nvim_lsp.clangd.setup { on_attach = on_attach,
+   nvim_lsp.clangd.setup {
+        on_attach = on_attach,
         commands = {
     	    ClangdSwitchSourceHeader = {
                 function() switch_source_header_splitcmd(0, "edit") end;
@@ -415,7 +440,12 @@ end
                 function() switch_source_header_splitcmd(0, "split") end;
                 description = "Open source/header in a new split";
             }
-    }
+     
+        },
+        -- this will expand the function overloads as explained in https://github.com/clangd/clangd/issues/172
+        -- cmd = { "clangd", "--background-index", "--completion-style=detailed" },
+        cmd = { "clangd", "--background-index" },
+        capabilities = capabilities,
    }
 EOF
 
@@ -426,8 +456,164 @@ require'nvim-treesitter.configs'.setup {
         enable = true,
         custom_captures = {},
     },
+  	incremental_selection = {
+		enable = true,
+		keymaps = {
+		    init_selection = "gnn",
+		  	node_incremental = "grn",
+			scope_incremental = "grc",
+			node_decremental = "grm",
+		},
+	},
+  	indent = {
+		enable = true
+	},
 }
 EOF
+
+"completion-nvim settings
+""" Use completion-nvim in every buffer
+""autocmd BufEnter * lua require'completion'.on_attach()
+""" Use <Tab> and <S-Tab> to navigate through popup menu
+""inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
+""inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+""
+""" Set completeopt to have a better completion experience
+""set completeopt=menuone,noinsert,noselect
+""
+""
+""""let g:completion_confirm_key = ""
+""imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
+""		\ "\<Plug>(completion_confirm_completion)"  :
+""		\ "\<c-e>\<CR>" : "\<CR>"
+""""let g:completion_confirm_key = "\<C-y>"
+""
+"""change completion source
+"""imap  <c-j> <Plug>(completion_next_source)
+"""imap  <c-k> <Plug>(completion_prev_source)
+""let g:completion_enable_snippet = 'vim-vsnip'
+""let g:completion_sorting = "length"
+""let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+"""let g:completion_enable_auto_paren=1
+"""matching smart case completion
+""let g:completion_matching_smart_case = 1
+""let g:completion_trigger_on_delete = 1
+""
+""""lua require'lspconfig'.texlab.setup{on_attach=require'completion'.on_attach}
+""let g:completion_chain_complete_list = [
+""    \{'complete_items': ['lsp']},
+""    \{'complete_items': ['path'], 'triggered_only': ['/']},
+""    \{'complete_items': ['buffers']},
+""    \{'complete_items': ['vim-vsnip']},
+""    \{'mode': '<c-p>'},
+""    \{'mode': '<c-n>'},
+""\]
+""let g:completion_auto_change_source = 1
+""
+""" Avoid showing message extra message when using completion
+set shortmess+=c
+
+
+"nvim-compe settings
+lua <<EOF
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  -- default_pattern = '\\h\\w*\\%(-\\w*\\)*';
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  resolve_timeout = 800;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = {
+    --border = "single",
+    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 120,
+    min_width = 60,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
+
+  source = {
+    omni = {
+        filetypes = {'tex'},
+        priority=1000;
+    },
+    path = true;
+    buffer = true;
+    vsnip = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+
+    calc = false;
+    ultisnips = false;
+    luasnip = false;
+  };
+}
+EOF
+
+
+"nvim-compe keybindings
+set completeopt=menuone,noselect
+"when press space it will close completion buffer
+"imap <expr><Space> pumvisible() ? "\<C-e>\<Space>" : "\<Space>"
+"imap <expr><Space> pumvisible() ? "\<Space>\<C-e>\<C-e>" : "\<Space>"
+""imap <expr><Space> pumvisible() ? "<CR>" : "\<Space>"
+inoremap <silent><expr> <C-c> compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+highlight link CompeDocumentation NormalFloat
+
+"neosnippet config
+""let g:neosnippet#enable_completed_snippet = 1
+""let g:neosnippet#enable_complete_done = 1
+""""
+""""" Plugin key-mappings.
+""" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+""imap <C-j>    <Plug>(neosnippet_expand_or_jump)
+""smap <C-j>    <Plug>(neosnippet_expand_or_jump)
+""xmap <C-j>    <Plug>(neosnippet_expand_or_jump)
+""nmap <C-j>    <Plug>(neosnippet_expand_or_jump)
+
+
+" SuperTab like snippets behavior.
+" Note: It must be "imap" and "smap".  It uses <Plug> mappings.
+"imap <expr><TAB>
+" \ pumvisible() ? "\<C-n>" :
+" \ neosnippet#expandable_or_jumpable() ?
+" \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+"smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+"\ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" Expand the completed snippet trigger by <CR>.
+"imap <expr><CR> neosnippet#expandable() ? "\<Plug>(neosnippet_expand)" : "\<CR>"
+"imap <expr><CR> neosnippet#expandable_or_jumpable() ?"\<Plug>(neosnippet_expand_or_jump)" : "\<CR>"
+
+"vsnip config
+" Expand
+imap <expr> <TAB> vsnip#available(1) ? '<Plug>(vsnip-expand)' : '<TAB>'
+imap <expr> <C-j> vsnip#available(1) ? '<Plug>(vsnip-jump-next)' : '<C-j>'
+smap <expr> <C-j> vsnip#available(1) ? '<Plug>(vsnip-jump-next)' : '<C-j>'
+imap <expr> <C-k> vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
+smap <expr> <C-k> vsnip#available(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
+
+" Select or cut text to use as $TM_SELECTED_TEXT in the next snippet.
+" See https://github.com/hrsh7th/vim-vsnip/pull/50
+"nmap        s   <Plug>(vsnip-select-text)
+"xmap        s   <Plug>(vsnip-select-text)
+"nmap        S   <Plug>(vsnip-cut-text)
+"xmap        S   <Plug>(vsnip-cut-text)
+
+
+
 
 
 " making the autocmpletion a bit more pleaseant
@@ -439,15 +625,6 @@ set updatetime=1000
 "autocmd InsertLeave,CompleteDone * if pumvisible() == 0 | pclose | endif
 set splitbelow
 
-"setting the paths to libclang, which was required for deoplete-clang
-"let g:deoplete#sources#clang#libclang_path = '/lib/libclang.so'
-"let g:deoplete#sources#clang#clang_header = '/lib/clang'
- " path to directory where library can be found
-
-"set cmdheight=2
-"set noshowmode
-"let g:echodoc#enable_at_startup = 1
-
 
 "autocmd!  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 
@@ -458,8 +635,6 @@ augroup filetypeAutoCommands
 
     au VimResized * exe "normal \<c-w>="
     
-    "set formatoptions-=cro " removes the shityy auto commenter
-    au FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
     
     " NOTE Using BufEnter might be a better idea because there are some cases where BufRead will not tigger
     
@@ -469,6 +644,8 @@ augroup filetypeAutoCommands
     au  BufRead,BufEnter *.tex source ~/.config/nvim/init_tex.vim
 " autocmd BufRead,BufEnter *.tex :!make
 
+"removes the auto insertion of comments for c and c++ files
+    au FileType c,cpp setlocal formatoptions-=cro
 " c++
     au  BufReadPre,BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
     au  BufReadPre,BufRead,BufEnter *.hpp source ~/.config/nvim/init_cpp.vim

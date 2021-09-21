@@ -4,6 +4,23 @@
 "  \ }
 ""lua require'lspconfig'.clangd.setup{}
 
+"""see https://jeffkreeftmeijer.com/vim-number/
+"""try hybrid line numbers
+""set number relativenumber
+""set nu rnu
+""
+"""this is if you have 2 windows and leave one, then all the line numbers will
+"""show
+""augroup numbertoggle
+""  autocmd!
+""  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
+""  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
+""augroup END
+
+"shitty temporary solution to change and excluding livegrep directories
+"nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep(require('summerProject').myTable())<cr>
+nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
+
 let g:clang_format#auto_format = 1
 let g:clang_format#auto_format_on_insert_leave = 0
 
@@ -31,4 +48,4 @@ let g:clang_format#style_options = {
             \"BreakBeforeBinaryOperators": "All",
             \"BreakStringLiterals": "false",
             \"SortIncludes":    "false",}
-            "\"ContinuationIndentWidth": 32}
+            "\"ContinuationIndentWidth": 8}
