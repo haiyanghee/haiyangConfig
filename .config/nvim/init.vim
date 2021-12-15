@@ -1,5 +1,10 @@
 call plug#begin('~/.local/share/nvim/plugged')
+
 Plug 'dracula/vim', { 'as': 'dracula' }
+
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+
+
 Plug 'rhysd/vim-clang-format' 
 
 "vimtex
@@ -74,6 +79,8 @@ Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
+let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+
 "enable vimtex
 let g:vimtex_enabled=1 
 let g:vimtex_quickfix_enabled=1
@@ -113,7 +120,8 @@ set tabstop=4 shiftwidth=4 expandtab
 set autoread
 set ignorecase
 set smartcase
-set background=dark
+
+"set background=dark
 
 colorscheme dracula
 
@@ -127,7 +135,12 @@ hi! Normal ctermbg=NONE guibg=NONE
 "set cursorline
 "set guicursor=
 "hi! MatchParen  guibg=darkgreen
-set termguicolors
+"set termguicolors
+if exists('+termguicolors')
+  let &t_8f="\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b="\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 
 set path+=**
 set wildmenu

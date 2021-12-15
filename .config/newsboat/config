@@ -30,7 +30,10 @@ color listfocus_unread yellow default bold
 color info red black bold
 color article white default bold
 
-browser chromium
+#browser chromium
+#browser "qutebrowser %u"
+#browser "qutebrowser --target window %u"
+browser linkhandler
 macro , open-in-browser
 #macro t set browser "qndl" ; open-in-browser ; set browser linkhandler
 #macro a set browser "tsp youtube-dl --add-metadata -xic -f bestaudio/best" ; open-in-browser ; set browser linkhandler
