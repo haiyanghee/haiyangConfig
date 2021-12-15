@@ -118,7 +118,7 @@ alias udiskunmount="udisksctl unmount -b "
 alias n="nvim"
 alias ga='git add'
 alias gs='git status'
-alias gc='git commit -m'
+alias gc='git commit'
 #alias gfix='git rebase -i HEAD~2'
 #alias gl='git log --pretty=short'
 alias gb='git branch'
@@ -139,10 +139,13 @@ alias bad='git add . && git commit -m "${badresponse[$(($RANDOM % ${#badresponse
 #set -o vi
 #when press 'v' in normal mode, it will bring you to a editor to edit the command, then save quit to run the command..
 export VISUAL="nvim"
+export EDITOR="nvim"
+export TERMINAL="st"
 #only show 3 dir depth so your screen does not get overwhelmed with paths..
 export PROMPT_DIRTRIM=3
 
-export BROWSER="chromium"
+#export BROWSER="chromium"
+export BROWSER="qutebrowser"
 
 #wine that uses deepin 5 (maybe not need? but for now its good)
 export WINEPREFIX="$HOME/.deepinwine/Deepin-WeChat"
@@ -166,7 +169,21 @@ if [[ $PS1 && -f /usr/share/git/git-prompt.sh ]]; then
 
 fi
 
+
+#add my scripts to the path so I don't need to manually type them
 export PATH=$PATH:~/.local/bin/:~/.scripts:~/dwmblocks-haiyang/scripts
 
+export DENO_INSTALL="/home/haiyang/.deno"
+export PATH="$DENO_INSTALL/bin:$PATH"
+
+# nvim server addr 
+# if multiple nvim buffers are opened, only one of them gets the /tmp/nvimsocket
+export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket
+
+#ignore duplicate histories
+export HISTCONTROL=ignoreboth:erasedups
+# append to the history instead of overwriting (good for multiple connections)
+shopt -s histappend
+
 #[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-wallpaper=~/.config/wallpaper/obitoLook.jpeg
+wallpaper=/home/haiyang/.config/wallpaper/dracula_arch.png
