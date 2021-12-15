@@ -1,0 +1,36 @@
+!! st-transparency
+!! FIXME: setting the alpha parameter will also be applied to emacs! (so emacs is transparent which is not what you want)
+!!*.alpha: 0.88
+!!*.alpha: 1
+
+
+!! Dracula scheme for st
+ /* 8 normal colors */
+*.color0: #000000 /* black   */
+*.color1: #ff5555 /* red     */
+*.color2: #50fa7b /* green   */
+*.color3: #f1fa8c /* yellow  */
+*.color4: #bd93f9 /* blue    */
+*.color5: #ff79c6 /* magenta */
+*.color6: #8be9fd /* cyan    */
+*.color7: #bbbbbb /* white   */
+
+/* 8 bright colors */
+*.color8: #44475a /* black   */
+*.color9: #ff6668 /* red     */
+*.color10: #50fa7b /* green   */
+*.color11: #f1fa8c /* yellow  */
+*.color12: #bd93f9 /* blue    */
+*.color13: #ff79c6 /* magenta */
+*.color14: #8be9fd /* cyan    */
+*.color15: #ffffff /* white   */
+
+/* special colors */
+/**.background: #282a36 *//* background */
+/**.foreground: #f8f8f2 *//* foreground */
+*.background: #282a36 /* background */
+*.foreground: #f8f8f2 /* foreground */
+
+!! st border pixels
+*.borderpx: 3
+
