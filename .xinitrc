@@ -52,16 +52,28 @@ source ~/.bashrc
 
 #set cursor
 xsetroot -cursor_name left_ptr
+#turns on numlock
+numlockx &
 
-exec fcitx &
-export GTK_IM_MODULE=fcitx
+# Note: should put these in ~/.pam_environment
+#export GTK_IM_MODULE=fcitx
+#export QT_IM_MODULE=fcitx
+#export XMODIFIERS=@im=fcitx
+#exec fcitx &
+exec fcitx5 &
+
+#applet for network manager
+#exec nm-applet &
 
 sxhkd &
 #udiskie --tray& #automatically mount usb! very cool
 
+#start imwheel
+imwheel -f -b 45&
+
 xset m 3/2 0
-amixer -c 0 set Speaker 100%
-amixer -c 0 set Speaker unmute
+#amixer -c 0 set Speaker 100%
+#amixer -c 0 set Speaker unmute
 #amixer -c 0 set Headphone 98%
 #amixer -c 0 set Headphone unmute
 
@@ -70,13 +82,16 @@ amixer -c 0 set Speaker unmute
 #sudo ~/.scripts/mouse.sh &
 sudo ~/.scripts/keyboard.sh &
 
-sudo ~/.scripts/hdmi-thinkpad.sh &
 sudo ~/.scripts/connectToWifi.sh &
+
 dwmblocks &
-feh --bg-max $wallpaper
+sudo ~/.scripts/hdmi-thinkpad.sh &
+
+feh --bg-max $wallpaper &
 # compton is replaced by picom now
-#compton &
-picom -CG&
+#picom -CG&
+#use experimental-backend for transparent-clipping
+#picom --experimental-backend -CG&
 ~/.scripts/normalScreenSaverTimeout.sh &
 ~/.scripts/redshiftopen.sh &
 
