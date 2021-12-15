@@ -140,7 +140,7 @@ alias bad='git add . && git commit -m "${badresponse[$(($RANDOM % ${#badresponse
 #when press 'v' in normal mode, it will bring you to a editor to edit the command, then save quit to run the command..
 export VISUAL="nvim"
 export EDITOR="nvim"
-export TERMINAL="st"
+export TERMINAL="Alacritty"
 #only show 3 dir depth so your screen does not get overwhelmed with paths..
 export PROMPT_DIRTRIM=3
 

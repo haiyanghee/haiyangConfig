@@ -84,7 +84,6 @@ sudo ~/.scripts/keyboard.sh &
 
 sudo ~/.scripts/connectToWifi.sh &
 
-dwmblocks &
 sudo ~/.scripts/hdmi-thinkpad.sh &
 
 feh --bg-max $wallpaper &
@@ -97,6 +96,9 @@ feh --bg-max $wallpaper &
 
 
 #exec i3
-exec dwm
+
+#dwmblocks &
+#exec dwm
+
 #exec ~/.scripts/startDwm.sh
-#exec xmonad
+exec xmonad
