@@ -126,6 +126,7 @@ set smartcase
 colorscheme dracula
 
 hi! Normal ctermbg=NONE guibg=NONE
+
 "hi! Visual guibg=#64666D
 
 "hi! Visual guibg=#70727A
