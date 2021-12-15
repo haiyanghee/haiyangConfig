@@ -1,0 +1,24 @@
+diff --git a/colors/dracula.vim b/colors/dracula.vim
+index df1e0a3..f10a43b 100644
+--- a/colors/dracula.vim
++++ b/colors/dracula.vim
+@@ -39,8 +39,8 @@ let s:bg        = g:dracula#palette.bg
+ let s:bgdark    = g:dracula#palette.bgdark
+ let s:bgdarker  = g:dracula#palette.bgdarker
+ 
+-let s:comment   = g:dracula#palette.comment
+-let s:selection = g:dracula#palette.selection
++let s:comment   = ['#7d98ee', 'NONE']
++let s:selection = ['#64666D', 'NONE']
+ let s:subtle    = g:dracula#palette.subtle
+ 
+ let s:cyan      = g:dracula#palette.cyan
+@@ -253,7 +253,7 @@ hi! link WarningMsg   DraculaOrangeInverse
+ " Syntax: {{{
+ 
+ " Required as some plugins will overwrite
+-call s:h('MatchParen', s:green, s:none, [s:attrs.underline])
++call s:h('MatchParen', s:bg, s:red, [s:attrs.underline])
+ call s:h('Conceal', s:cyan, s:none)
+ 
+ " Neovim uses SpecialKey for escape characters only. Vim uses it for that, plus whitespace.
