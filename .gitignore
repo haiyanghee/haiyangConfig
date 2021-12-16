@@ -1,6 +1,8 @@
 .config/fcitx/*
 .config/nvim/plugged
 
+build-x86_64-linux
+
 dist
 dist-*
 cabal-dev
