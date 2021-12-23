@@ -42,7 +42,6 @@ Plug 'djoshea/vim-autoread'
 ""Plug 'nvim-lua/completion-nvim'
 ""Plug 'steelsojka/completion-buffers'
 
-Plug 'hrsh7th/nvim-compe'
 
 " TODO : can try ncm2 for maybe faster performance?
 "Deoplete
@@ -64,8 +63,6 @@ endif
 
 ""Plug 'deoplete-plugins/deoplete-lsp'
 
-Plug 'hrsh7th/vim-vsnip'
-Plug 'hrsh7th/vim-vsnip-integ'
 
 ""Plug 'Shougo/neosnippet.vim'
 ""Plug 'Shougo/neosnippet-snippets'
@@ -73,6 +70,24 @@ Plug 'hrsh7th/vim-vsnip-integ'
 
 "python3 support for neovim:
 "pip3 install --user pynvim
+
+
+
+"Plug 'hrsh7th/nvim-compe'
+"Plug 'hrsh7th/vim-vsnip'
+"Plug 'hrsh7th/vim-vsnip-integ'
+
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-path'
+Plug 'hrsh7th/cmp-cmdline'
+Plug 'hrsh7th/cmp-omni'
+Plug 'hrsh7th/nvim-cmp'
+
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
+
 
 "Vim table mode
 Plug 'dhruvasagar/vim-table-mode'
@@ -329,9 +344,10 @@ autocmd BufWritePost * call defx#redraw()
 "lsp active parameter highlight
 hi! link LspSignatureActiveParameter DraculaGreenItalicUnderline
 
-"lsp settings
-lua << EOF
 
+"lsp settings
+
+lua << EOF
 local function preview_location_callback(_, _, result)
   if result == nil or vim.tbl_isempty(result) then
     return nil
@@ -344,6 +360,41 @@ function PeekDefinition()
   return vim.lsp.buf_request(0, 'textDocument/definition', params, preview_location_callback)
 end
 
+local function goto_definition(split_cmd)
+  local util = vim.lsp.util
+  local log = require("vim.lsp.log")
+  local api = vim.api
+
+  -- note, this handler style is for neovim 0.5.1/0.6, if on 0.5, call with function(_, method, result)
+  local handler = function(_, result, ctx)
+    if result == nil or vim.tbl_isempty(result) then
+      local _ = log.info() and log.info(ctx.method, "No location found")
+      return nil
+    end
+
+    if split_cmd then
+      vim.cmd(split_cmd)
+    end
+
+    if vim.tbl_islist(result) then
+      util.jump_to_location(result[1])
+
+      if #result > 1 then
+        util.set_qflist(util.locations_to_items(result))
+        api.nvim_command("copen")
+        api.nvim_command("wincmd p")
+      end
+    else
+      util.jump_to_location(result)
+    end
+  end
+
+  return handler
+end
+
+-- go to definition as vsplit
+vim.lsp.handlers["textDocument/definition"] = goto_definition('vsplit')
+
 
 local nvim_lsp = require('lspconfig')
 local on_attach = function(client, bufnr)
@@ -355,8 +406,8 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-  -- buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
-  buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
+   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  -- buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
@@ -419,25 +470,37 @@ end
 
 
  -- to open header file as a vsplit
-local function switch_source_header_splitcmd(bufnr, splitcmd)
-    bufnr = require'lspconfig'.util.validate_bufnr(bufnr)
-    local params = { uri = vim.uri_from_bufnr(bufnr) }
-    vim.lsp.buf_request(bufnr, 'textDocument/switchSourceHeader', params, function(err, _, result)
-        if err then error(tostring(err)) end
-        if not result then print ("Corresponding file can’t be determined") return end
-        vim.api.nvim_command(splitcmd..' '..vim.uri_to_fname(result))
-    end)
+ local function switch_source_header_splitcmd(bufnr, splitcmd)
+  bufnr = require'lspconfig'.util.validate_bufnr(bufnr)
+  local clangd_client = require'lspconfig'.util.get_active_client_by_name(bufnr, 'clangd')
+  local params = {uri = vim.uri_from_bufnr(bufnr)}
+  if clangd_client then
+    clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
+      if err then
+        error(tostring(err))
+      end
+      if not result then
+        print("Corresponding file can’t be determined")
+        return
+      end
+      vim.api.nvim_command(splitcmd .. " " .. vim.uri_to_fname(result))
+    end, bufnr)
+  else
+    print 'textDocument/switchSourceHeader is not supported by the clangd server active on the current buffer'
+  end
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.completion.completionItem.resolveSupport = {
-  properties = {
-    'documentation',
-    'detail',
-    'additionalTextEdits',
-  }
-}
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+
+-- local capabilities = vim.lsp.protocol.make_client_capabilities()
+-- capabilities.textDocument.completion.completionItem.snippetSupport = true
+-- capabilities.textDocument.completion.completionItem.resolveSupport = {
+--   properties = {
+--     'documentation',
+--     'detail',
+--     'additionalTextEdits',
+--   }
+-- }
 
    nvim_lsp.clangd.setup {
         on_attach = on_attach,
@@ -529,62 +592,123 @@ set shortmess+=c
 
 
 "nvim-compe settings
+"lua <<EOF
+"require'compe'.setup {
+"  enabled = true;
+"  autocomplete = true;
+"  debug = false;
+"  min_length = 1;
+"  -- default_pattern = '\\h\\w*\\%(-\\w*\\)*';
+"  preselect = 'enable';
+"  throttle_time = 80;
+"  source_timeout = 200;
+"  resolve_timeout = 800;
+"  incomplete_delay = 400;
+"  max_abbr_width = 100;
+"  max_kind_width = 100;
+"  max_menu_width = 100;
+"  documentation = {
+"    --border = "single",
+"    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+"    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+"    max_width = 120,
+"    min_width = 60,
+"    max_height = math.floor(vim.o.lines * 0.3),
+"    min_height = 1,
+"  };
+"
+"  source = {
+"    omni = {
+"        filetypes = {'tex'},
+"        priority=1000;
+"    },
+"    path = true;
+"    buffer = true;
+"    vsnip = true;
+"    nvim_lsp = true;
+"    nvim_lua = true;
+"
+"    calc = false;
+"    ultisnips = false;
+"    luasnip = false;
+"  };
+"}
+"EOF
+
+
+"nvim-cmp settings
 lua <<EOF
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  -- default_pattern = '\\h\\w*\\%(-\\w*\\)*';
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  resolve_timeout = 800;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = {
-    --border = "single",
-    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
-    max_width = 120,
-    min_width = 60,
-    max_height = math.floor(vim.o.lines * 0.3),
-    min_height = 1,
-  };
+  -- Setup nvim-cmp.
+  local cmp = require'cmp'
 
-  source = {
-    omni = {
-        filetypes = {'tex'},
-        priority=1000;
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
     },
-    path = true;
-    buffer = true;
-    vsnip = true;
-    nvim_lsp = true;
-    nvim_lua = true;
+    mapping = {
+      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-c>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
+      ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+      -- { name = 'omni' },
+    }, {
+      { name = 'buffer' },
+      { name = 'path' },
+    })
+  })
 
-    calc = false;
-    ultisnips = false;
-    luasnip = false;
-  };
-}
+
+  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  -- cmp.setup.cmdline('/', {
+  --   sources = {
+  --     { name = 'buffer' }
+  --   }
+  -- })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  -- cmp.setup.cmdline(':', {
+  --   sources = cmp.config.sources({
+  --     { name = 'path' }
+  --   }, {
+  --     { name = 'cmdline' }
+  --   })
+  -- })
+
 EOF
 
 
 "nvim-compe keybindings
-set completeopt=menuone,noselect
+"set completeopt=menuone,noselect
+set completeopt=menu,menuone,noselect
+
 "when press space it will close completion buffer
 "imap <expr><Space> pumvisible() ? "\<C-e>\<Space>" : "\<Space>"
 "imap <expr><Space> pumvisible() ? "\<Space>\<C-e>\<C-e>" : "\<Space>"
-""imap <expr><Space> pumvisible() ? "<CR>" : "\<Space>"
-inoremap <silent><expr> <C-c> compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
-highlight link CompeDocumentation NormalFloat
+"imap <expr><Space> pumvisible() ? "<CR>" : "\<Space>"
+"inoremap <silent><expr> <C-c> compe#complete()
+"inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+"inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+"inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+"inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+"highlight link CompeDocumentation NormalFloat
 
 "neosnippet config
 ""let g:neosnippet#enable_completed_snippet = 1

@@ -16,6 +16,21 @@ nnoremap <buffer>j gj
 "remove weird indent
 set inde=
 
+" set up for this buffer
+lua <<EOF
+  local cmp = require'cmp'
+
+  cmp.setup.buffer({
+    sources = cmp.config.sources({
+      { name = 'omni' },
+    }, {
+      { name = 'buffer' },
+      { name = 'path' },
+    })
+  })
+EOF
+
+
 "autocmd! BufWritePost * :!pdflatex -synctex=1 % 
 
 ""augroup texAutoCommands
