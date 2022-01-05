@@ -1,0 +1,75 @@
+syntax on
+
+set mouse=a
+set noswapfile
+set incsearch 
+set showmatch 
+set encoding=utf-8
+set backspace=indent,eol,start
+set hlsearch
+set number
+"relative line numbers on all files!
+set relativenumber
+set laststatus=2
+set ruler
+set tabstop=4 shiftwidth=4 expandtab
+set autoread
+set ignorecase
+set smartcase
+set background=dark
+set expandtab
+
+hi! Normal ctermbg=NONE guibg=NONE
+"hi! Visual guibg=#64666D
+
+"hi! Visual guibg=#70727A
+"hi! Visual guibg=#56596A
+"hi! NonText ctermbg=NONE guibg=NONE
+"hi! Cursor guibg=white guifg=black
+"set cursorline
+"set guicursor=
+"hi! MatchParen  guibg=darkgreen
+""set termguicolors
+
+set path+=**
+set wildmenu
+set hidden "allows switching buffers without saving
+
+filetype on
+filetype indent on
+filetype plugin on
+
+"open links correctly with gx
+nnoremap <silent> gx :execute 'silent! !xdg-open ' . shellescape(expand('<cWORD>'), 1)<cr>
+
+"change buffer directory
+nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
+
+"visually select text
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+"copy file name
+nnoremap cf :let @+=expand("%:t")<CR>
+nnoremap yf :let @"=expand("%:t")<CR>
+"copy file path
+nnoremap cF :let @+=expand("%:p")<CR>
+nnoremap yF :let @"=expand("%:p")<CR>
+
+"open quickfix list
+nnoremap <C-q> :copen<CR>
+nnoremap <C-j> :cnext<CR>zz
+nnoremap <C-k> :cprev<CR>zz
+nnoremap <leader>j :lnext<CR>zz
+nnoremap <leader>k :lprev<CR>zz
+
+nnoremap <Leader>te :tabe<cr>:Ex<cr>
+nnoremap <silent> <Leader>tc :tabclose<cr>
+"nnoremap k gk
+"nnoremap j gj
+
+""nnoremap <C-h> <C-w> h
+""nnoremap <C-j> <C-w> j
+""nnoremap <C-k> <C-w> k
+""nnoremap <C-l> <C-w> l
+map <C-c> "+y<CR>
+
