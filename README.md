@@ -5,6 +5,12 @@ To "enable" pdf scrolling with vimium, get PDF Viewer from chromium store.
 
 Also add dash to /bin/sh I guess?
 
+# Wechat font
+If you see square boxes (and you installed [deepin-wine-wechat](https://aur.archlinux.org/packages/deepin-wine-wechat)), maybe try the following (as described on github):
+
+After 3.5.0.46-2, the font is bugged (also the emotes), but to fix the font you can download 微软雅黑 `fake_simsun.ttc` on this [link](https://blog.csdn.net/weixin_42396174/article/details/116895867) (the guy put up baidu yunpan [here](https://pan.baidu.com/s/1Y43YerNoPJVz_Fhp6BAWaw) with password `96qm`). I have a copy in this repo as well.
+
+After you download it, just put it into the folder `$HOME/.deepinwine/Deepin-WeChat/drive_c/windows/Fonts` and everything should work fine. 
 
 # Qutebrowser handling xdg-open?
 You can check the default application for MIME by running `env XDG_UTILS_DEBUG_LEVEL=10  xdg-mime query default text/html` (as stated in [Arch wiki](https://wiki.archlinux.org/title/Xdg-utils)). 
