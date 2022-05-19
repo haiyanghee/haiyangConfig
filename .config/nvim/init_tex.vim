@@ -14,20 +14,35 @@ nnoremap <buffer>k gk
 nnoremap <buffer>j gj
 
 "remove weird indent
-set inde=
+"NOTE: if you uncomment the line below, when you use vimtex macros like "]]",
+"it insets a "^F" after it ... don't know why
+"set inde=
+
+"this is the default indent keys for vim
+"set indentkeys=0{,0},0),0],:,0#,!^F,o,O,e
 
 " set up for this buffer
 lua <<EOF
-  local cmp = require'cmp'
+  local cmp = require('cmp')
 
-  cmp.setup.buffer({
+  cmp.setup.buffer {
+    formatting = {
+      format = function(entry, vim_item)
+          vim_item.menu = ({
+            omni = (vim.inspect(vim_item.menu):gsub('%"', "")),
+            buffer = "[Buffer]",
+            -- formatting for other sources
+            })[entry.source.name]
+          return vim_item
+        end,
+    },
     sources = cmp.config.sources({
-      { name = 'omni' },
+       { name = 'omni' },
     }, {
       { name = 'buffer' },
       { name = 'path' },
     })
-  })
+  }
 EOF
 
 

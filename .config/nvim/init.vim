@@ -32,6 +32,8 @@ Plug 'nvim-lua/popup.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
+Plug 'nvim-telescope/telescope-file-browser.nvim'
+
 ""Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
 "will make vim to reload files that are saved but not edited..
@@ -83,6 +85,7 @@ Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/cmp-omni'
 Plug 'hrsh7th/nvim-cmp'
+Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
@@ -103,7 +106,7 @@ let g:vimtex_view_method = 'zathura'
 let g:vimtex_compiler_progname = 'nvr'
 let g:tex_flavor = 'latex'
 let g:vimtex_quickfix_ignore_filters = [
-      \ 'Warning',
+      "\ 'Warning',
       \ 'Underfull',
       \ 'Overfull',
       \]
@@ -162,6 +165,9 @@ set path+=**
 set wildmenu
 set hidden "allows switching buffers without saving
 
+"make sure tab complete works on command line mode ...
+set wildcharm=<Tab>
+
 filetype on
 filetype indent on
 filetype plugin on
@@ -198,7 +204,8 @@ nnoremap <silent> <Leader>tc :tabclose<cr>
 ""nnoremap <C-j> <C-w> j
 ""nnoremap <C-k> <C-w> k
 ""nnoremap <C-l> <C-w> l
-map <C-c> "+y<CR>
+""map <C-c> "+y<CR>
+map <C-c> "+y
 
 "bracket completion
 inoremap ( ()<esc>ha
@@ -256,8 +263,46 @@ let g:table_mode_corner='|'
 "Turns off deoplete completion in telescope prompt
 ""autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
 
-"nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap <leader>ff <cmd>lua require('telescope.builtin').file_browser()<cr>
+lua<<EOF
+local actions = require "telescope.actions"
+
+-- You don't need to set any of these options.
+-- IMPORTANT!: this is only a showcase of how you can set default options!
+require("telescope").setup {
+  extensions = {
+    file_browser = {
+      -- theme = "ivy",
+      mappings = {
+        ["i"] = {
+          -- your custom insert mode mappings
+
+          -- this is the default telescope binding to open file to new tab
+        ["<C-t>"] = actions.select_tab,
+        },
+        ["n"] = {
+          -- your custom normal mode mappings
+          f = false
+        },
+      },
+    },
+  },
+}
+-- To get telescope-file-browser loaded and working with telescope,
+-- you need to call load_extension, somewhere after setup function:
+require("telescope").load_extension "file_browser"
+
+-- vim.api.nvim_set_keymap(
+--   "n",
+--   "<leader>ff",
+--   ":Telescope file_browser<CR>",
+--   { noremap = true }
+-- )
+
+EOF
+
+
+nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+"nnoremap <leader>ff <cmd>lua require('telescope.builtin').file_browser()<cr>
 
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
@@ -406,7 +451,7 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   -- buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -418,18 +463,20 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts) -- not supported by clang yet
   buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   -- buf_set_keymap('n', '<space>ca', '<cmd>lua vim.lsp.buf.range_code_action()<CR>', opts)
-   buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
+  -- buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_code_actions()<CR>", opts)
   -- buf_set_keymap('n', '<space>ca', "<cmd>lua require('telescope.builtin').lsp_range_code_actions()<CR>", opts)
    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
 
   buf_set_keymap('n', '<leader>dd', "<cmd>lua require('telescope.builtin').lsp_document_diagnostics()<CR>", opts)
   buf_set_keymap('n', '<leader>wd', "<cmd>lua require('telescope.builtin').lsp_workspace_diagnostics()<CR>", opts)
-  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+  -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<leader>ds', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
   -- buf_set_keymap('n', '<leader>ws', "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
   buf_set_keymap('n', '<leader>ws', "<cmd>lua require('telescope.builtin').lsp_dynamic_workspace_symbols()<CR>", opts)
@@ -524,6 +571,9 @@ end
         cmd = { "clangd", "--background-index" },
         capabilities = capabilities,
    }
+
+
+
 EOF
 
 "For comment highlighting (such as TODO, FIXME, ... ) install the `comment` parser!
@@ -641,6 +691,16 @@ lua <<EOF
   -- Setup nvim-cmp.
   local cmp = require'cmp'
 
+local has_words_before = function()
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
+
   cmp.setup({
     snippet = {
       -- REQUIRED - you must specify a snippet engine
@@ -660,7 +720,37 @@ lua <<EOF
         i = cmp.mapping.abort(),
         c = cmp.mapping.close(),
       }),
+
       ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      --function(fallback)
+      --  if cmp.visible() then
+      --      cmp.mapping.confirm({ select = false })
+      --  else
+      --    fallback() -- If you are using vim-endwise, this fallback function will be behaive as the vim-endwise.
+      --  end
+      --end,
+
+
+      ['<C-n>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          --if cmp.complete_common_string() then
+          --  return
+          --end
+          return cmp.select_next_item()
+        end
+        fallback()
+      end, { 'i', 'c' }),
+
+      ['<C-p>'] = cmp.mapping(function(fallback)
+        if cmp.visible() then
+          -- if cmp.complete_common_string() then
+          --   return
+          -- end
+          return cmp.select_prev_item()
+        end
+        fallback()
+      end, { 'i', 'c' }),
+
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -669,12 +759,24 @@ lua <<EOF
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
       -- { name = 'omni' },
+
+      -- { name = 'nvim_lsp_signature_help' } -- IDE-like auto signature help/active parameter handling
     }, {
       { name = 'buffer' },
       { name = 'path' },
     })
   })
 
+
+    cmp.setup.cmdline('/', {                                  
+      mapping = cmp.mapping.preset.cmdline() ,
+      sources = {
+        { name = 'buffer' }
+      },
+      -- view = {                                                
+      --   entries = {name = 'wildmenu', separator = '|' }       
+      -- },                                                      
+    })
 
   -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
   -- cmp.setup.cmdline('/', {
