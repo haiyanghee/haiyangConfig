@@ -21,8 +21,8 @@
 "nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep(require('summerProject').myTable())<cr>
 nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
 
-""let g:clang_format#auto_format = 1
-""let g:clang_format#auto_format_on_insert_leave = 0
+let g:clang_format#auto_format = 1
+let g:clang_format#auto_format_on_insert_leave = 0
 
 
 let g:clang_format#style_options = {
