@@ -10,6 +10,19 @@
 # If the script is run with a non-Alacritty window in focus or a non-compliant
 # version of Alacritty, an instance will be spawned in the user's $HOME.
 
+
+#for alacritty
+#termCmdXcwd="alacritty --working-directory "$(xcwd)""
+#termCmdShellCwd="alacritty --working-directory \$SHELL_CWD"
+
+#for st
+#termCmdXcwd="st -d "$(xcwd)" -e tmux"
+#termCmdShellCwd="st -d \$SHELL_CWD -e tmux"
+termCmdXcwd="st -d "$(xcwd)""
+termCmdShellCwd="st -d \$SHELL_CWD"
+
+#echo $(eval "echo $mycmd")
+
 ACTIVE_WINDOW=$(xdotool getactivewindow)
 ACTIVE_WM_CLASS=$(xprop -id $ACTIVE_WINDOW | grep WM_CLASS)
 if [[ $ACTIVE_WM_CLASS == *"Alacritty"* ]]
@@ -19,22 +32,26 @@ then
     if [[ "$PID" == "" ]]
     then
         # actually, if you have xcwd installed you can just try it instead
-        alacritty --working-directory "$(xcwd)"
+        #alacritty --working-directory "$(xcwd)"
+        $(eval "echo $termCmdXcwd")
     fi
     # Get first child of terminal
     CHILD_PID=$(pgrep -P $PID)
     if [[ "$PID" == "" ]]
     then
         # actually, if you have xcwd installed you can just try it instead
-        alacritty --working-directory "$(xcwd)"
+        #alacritty --working-directory "$(xcwd)"
+        $(eval "echo $termCmdXcwd")
     fi
     # Get current directory of child. The first child should be the shell.
     pushd "/proc/${CHILD_PID}/cwd"
     SHELL_CWD=$(pwd -P)
     popd
     # Start alacritty with the working directory
-    alacritty --working-directory $SHELL_CWD
+    #alacritty --working-directory $SHELL_CWD
+    $(eval "echo $termCmdShellCwd")
 else
     # actually, if you have xcwd installed you can just try it instead
-    alacritty --working-directory "$(xcwd)"
+    #alacritty --working-directory "$(xcwd)"
+    $(eval "echo $termCmdXcwd")
 fi
