@@ -53,7 +53,7 @@ window:
     y: 3
 
   # Spread additional padding evenly around the terminal content.
-  dynamic_padding: false
+  dynamic_padding: true
 
   # Window decorations
   #
@@ -107,14 +107,14 @@ scrolling:
 # Font configuration
 font:
   # Normal (roman) font face
-  #normal:
+  normal:
     # Font family
     #
     # Default:
     #   - (macOS) Menlo
     #   - (Linux/BSD) monospace
     #   - (Windows) Consolas
-    #family: monospace
+    family: DejaVuSansMono
 
     # The `style` can be specified to pick a specific face.
     #style: Regular
@@ -186,8 +186,8 @@ colors:
       background: '#282a36'
       foreground: '#f8f8f2'
     cursor:
-      text: CellBackground
-      #text: '#000000'
+      #text: CellBackground
+      text: '#000000'
       #cursor: CellForeground
       cursor: '#ffffff'
     vi_mode_cursor:
@@ -330,7 +330,8 @@ colors: *Dracula
 # Window opacity as a floating point number from `0.0` to `1.0`.
 # The value `0.0` is completely transparent and `1.0` is opaque.
 #background_opacity: 1.0
-background_opacity: 0.8
+#window.opacity: 1
+window.opacity: 0.8
 
 #selection:
   # This string contains all characters that are used as separators for
