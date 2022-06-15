@@ -259,6 +259,13 @@ nnoremap <Leader>ev: :vsplit ~/.config/nvim/init.vim<cr>
 "nnoremap <Leader>u :w<Home>slient <End> !urlview<CR>
 noremap <Leader>u :w<Home>silent <End> !urlview<CR>
 
+ " When editing a file, always jump to the last cursor position
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+\   exe "normal! g'\"" |
+\ endif
+
+
 
 "table mode compatibility with markdown
 let g:table_mode_corner='|'
