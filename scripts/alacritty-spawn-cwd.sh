@@ -14,18 +14,22 @@
 #for alacritty
 #termCmdXcwd="alacritty --working-directory "$(xcwd)""
 #termCmdShellCwd="alacritty --working-directory \$SHELL_CWD"
+#termWM_CLASS="Alacritty"
 
 #for st
 #termCmdXcwd="st -d "$(xcwd)" -e tmux"
 #termCmdShellCwd="st -d \$SHELL_CWD -e tmux"
 termCmdXcwd="st -d "$(xcwd)""
 termCmdShellCwd="st -d \$SHELL_CWD"
+termWM_CLASS="st"
 
 #echo $(eval "echo $mycmd")
 
 ACTIVE_WINDOW=$(xdotool getactivewindow)
 ACTIVE_WM_CLASS=$(xprop -id $ACTIVE_WINDOW | grep WM_CLASS)
-if [[ $ACTIVE_WM_CLASS == *"Alacritty"* ]]
+#if [[ $ACTIVE_WM_CLASS == *"Alacritty"* ]]
+
+if [[ $ACTIVE_WM_CLASS == *"$termWM_CLASS"* ]]
 then
     # Get PID. If _NET_WM_PID isn't set, bail.
     PID=$(xprop -id $ACTIVE_WINDOW | grep _NET_WM_PID | grep -oP "\d+")
