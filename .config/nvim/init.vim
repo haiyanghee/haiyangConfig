@@ -306,7 +306,11 @@ nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
 
 nnoremap <leader>fg <cmd>lua require('telescope.builtin').git_files()<cr>
 nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+
+""nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+"find file in current buffer
+nnoremap <leader>fbf <cmd>lua require('telescope.builtin').find_files( { cwd = vim.fn.expand('%:p:h') })<cr>
+nnoremap <leader>fbs <cmd>lua require('telescope.builtin').live_grep( { cwd = vim.fn.expand('%:p:h') })<cr>
 nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
 
 
@@ -456,7 +460,8 @@ local on_attach = function(client, bufnr)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   -- buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-  buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+  -- in normal mode, will use c-k as going up in quickfix list
+  -- buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('i', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
   buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
   buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
@@ -572,7 +577,43 @@ end
         capabilities = capabilities,
    }
 
+local diagnostics_active_global = true
+local toggle_diagnostics_global = function()
+  diagnostics_active_global = not diagnostics_active_global
+  if diagnostics_active_global then
+    vim.diagnostic.show()
+  else
+    vim.diagnostic.hide()
+  end
+end
 
+-- took idea from https://github.com/ColinKennedy/toggle-lsp-diagnostics.nvim/tree/feature/disable_per_buffer
+-- didn't know you can set local buffer variables ...
+DIAGNOSTICS_BUFFER_VAR = "_diagnostics_buffer_var"
+local toggle_diagnostics_local = function()
+ --if the buffer variable doesn't exist, an exception will be thrown. Thus we use the `pcall` function in lua
+ --stat returns true if no exception is triggered
+  local stat, val = pcall(function() return vim.api.nvim_buf_get_var(0, DIAGNOSTICS_BUFFER_VAR) end)
+  --suppose DIAGNOSTICS_BUFFER_VAR is a boolean, which is the current behaviour of the buffer ...
+  if stat then
+      vim.api.nvim_buf_set_var(0, DIAGNOSTICS_BUFFER_VAR, not val) --set the negation
+      -- no ternary operator in lua :(
+      -- write in C: val ? show : hide;
+      if val then
+        vim.diagnostic.hide(nil, 0)
+      else
+        vim.diagnostic.show(nil, 0)
+      end
+  else
+      --assume the diagnostic is turned on by default, so we will turn it off
+      vim.api.nvim_buf_set_var(0, DIAGNOSTICS_BUFFER_VAR, false)
+      vim.diagnostic.hide(nil, 0)
+  end
+end
+
+
+vim.keymap.set('n', '<leader>tD', toggle_diagnostics_global) --global diagnostic toggle
+vim.keymap.set('n', '<leader>td', toggle_diagnostics_local) --local diagnostic toggle
 
 EOF
 
