@@ -12,14 +12,15 @@ Plug 'rhysd/vim-clang-format'
 Plug 'lervag/vimtex'
 
 "neomake
-Plug 'neomake/neomake'
+""Plug 'neomake/neomake'
 
 "eclim??
 "Plug 'dansomething/vim-eclim'
 
-Plug 'mfussenegger/nvim-jdtls'
+""Plug 'mfussenegger/nvim-jdtls'
+
 "Syntax highlighting for magma
-Plug 'petRUShka/vim-magma'
+""Plug 'petRUShka/vim-magma'
 
 "vim git stuff
 Plug 'tpope/vim-fugitive'
@@ -33,6 +34,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 
 ""Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
@@ -92,8 +94,14 @@ Plug 'hrsh7th/vim-vsnip'
 
 
 
+"saving sessions
+Plug 'tpope/vim-obsession'
+"actions on quickfix windows
+Plug 'yssl/QFEnter'
+
+
 "Vim table mode
-Plug 'dhruvasagar/vim-table-mode'
+""Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
@@ -122,7 +130,10 @@ endif
 
 
 syntax on
-set mouse=a
+"enable mouse
+""set mouse=a
+"disable mouse
+set mouse-=a
 set noswapfile
 set incsearch 
 set showmatch 
@@ -229,7 +240,7 @@ noremap <Leader>' ci"
 
 " set neovim's current directory to what I'm using  in terminal buffer shitty
 " solution but works: https://www.reddit.com/r/neovim/comments/7fafxv/set_neovims_current_directory_to_the_one_im_using/
-tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
+""tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
 
 "To map <Esc> to exit terminal-mode:
 tnoremap <Esc> <C-\><C-n>
@@ -253,6 +264,15 @@ nnoremap <Leader>ev: :vsplit ~/.config/nvim/init.vim<cr>
 " use urlview
 "nnoremap <Leader>u :w<Home>slient <End> !urlview<CR>
 noremap <Leader>u :w<Home>silent <End> !urlview<CR>
+
+"if tab exist, switch to tab
+""set switchbuf+=usetab
+
+"QFEnter
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.vopen = ['<C-v>']
+let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
+let g:qfenter_keymap.topen = ['<C-t>']
 
 
 "table mode compatibility with markdown
@@ -278,6 +298,7 @@ require("telescope").setup {
 
           -- this is the default telescope binding to open file to new tab
         ["<C-t>"] = actions.select_tab,
+          -- ctrl-x splits horizontally
         },
         ["n"] = {
           -- your custom normal mode mappings
@@ -290,6 +311,7 @@ require("telescope").setup {
 -- To get telescope-file-browser loaded and working with telescope,
 -- you need to call load_extension, somewhere after setup function:
 require("telescope").load_extension "file_browser"
+require('telescope').load_extension('fzf')
 
 -- vim.api.nvim_set_keymap(
 --   "n",
@@ -498,16 +520,17 @@ local on_attach = function(client, bufnr)
   end
 
     --Set autocommands conditional on server_capabilities
-  if client.resolved_capabilities.document_highlight then
-    vim.api.nvim_exec([[
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-    ]], false)
-  end
+    -- commented out because apparently clang9 doesn't like this?
+   if client.resolved_capabilities.document_highlight then
+     vim.api.nvim_exec([[
+       augroup lsp_document_highlight
+         autocmd! * <buffer>
+         autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+         autocmd CursorHoldI <buffer> lua vim.lsp.buf.document_highlight()
+         autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+       augroup END
+     ]], false)
+   end
 end
 
 
@@ -554,6 +577,9 @@ end
 --   }
 -- }
 
+
+
+
    nvim_lsp.clangd.setup {
         on_attach = on_attach,
         commands = {
@@ -576,6 +602,20 @@ end
         cmd = { "clangd", "--background-index" },
         capabilities = capabilities,
    }
+
+  --  nvim_lsp.ccls.setup {
+  --    on_attach = on_attach,
+  --    init_options = {
+  --      -- compilationDatabaseDirectory = "build";
+  --      index = {
+  --        threads = 0;
+  --      };
+  --      clang = {
+  --        excludeArgs = { "-frounding-math"} ;
+  --      };
+  --    }
+  --  }
+
 
 local diagnostics_active_global = true
 local toggle_diagnostics_global = function()
@@ -809,15 +849,16 @@ end
   })
 
 
-    cmp.setup.cmdline('/', {                                  
-      mapping = cmp.mapping.preset.cmdline() ,
-      sources = {
-        { name = 'buffer' }
-      },
-      -- view = {                                                
-      --   entries = {name = 'wildmenu', separator = '|' }       
-      -- },                                                      
-    })
+   -- this is annoying if you want to go up the previous searches, since you cant.. you can only go 1 up and you are stuck in previewing buffer completion 
+   -- cmp.setup.cmdline('/', {                                  
+   --   mapping = cmp.mapping.preset.cmdline() ,
+   --   sources = {
+   --     { name = 'buffer' }
+   --   },
+   --   -- view = {                                                
+   --   --   entries = {name = 'wildmenu', separator = '|' }       
+   --   -- },                                                      
+   -- })
 
   -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
   -- cmp.setup.cmdline('/', {
@@ -930,6 +971,8 @@ augroup filetypeAutoCommands
 " c++
     au  BufReadPre,BufRead,BufEnter *.cpp source ~/.config/nvim/init_cpp.vim
     au  BufReadPre,BufRead,BufEnter *.hpp source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.C source ~/.config/nvim/init_cpp.vim
+    au  BufReadPre,BufRead,BufEnter *.H source ~/.config/nvim/init_cpp.vim
 
 " c
     au  BufReadPre,BufRead,BufEnter *.c source ~/.config/nvim/init_cpp.vim

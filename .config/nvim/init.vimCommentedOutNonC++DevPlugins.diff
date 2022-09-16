@@ -1,0 +1,32 @@
+diff --git a/.config/nvim/init.vim b/.config/nvim/init.vim
+index c6b16f5..26d00a1 100644
+--- a/.config/nvim/init.vim
++++ b/.config/nvim/init.vim
+@@ -12,14 +12,15 @@ Plug 'rhysd/vim-clang-format'
+ Plug 'lervag/vimtex'
+ 
+ "neomake
+-Plug 'neomake/neomake'
++""Plug 'neomake/neomake'
+ 
+ "eclim??
+ "Plug 'dansomething/vim-eclim'
+ 
+-Plug 'mfussenegger/nvim-jdtls'
++""Plug 'mfussenegger/nvim-jdtls'
++
+ "Syntax highlighting for magma
+-Plug 'petRUShka/vim-magma'
++""Plug 'petRUShka/vim-magma'
+ 
+ "vim git stuff
+ Plug 'tpope/vim-fugitive'
+@@ -90,7 +91,7 @@ Plug 'hrsh7th/vim-vsnip'
+ 
+ 
+ "Vim table mode
+-Plug 'dhruvasagar/vim-table-mode'
++""Plug 'dhruvasagar/vim-table-mode'
+ 
+ call plug#end()
+ 

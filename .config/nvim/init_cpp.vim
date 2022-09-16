@@ -19,12 +19,17 @@
 
 "shitty temporary solution to change and excluding livegrep directories
 "nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep(require('summerProject').myTable())<cr>
-nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
+""nnoremap <leader>fs <cmd>lua require('telescope.builtin').live_grep()<cr>
 
-""let g:clang_format#auto_format = 1
-""let g:clang_format#auto_format_on_insert_leave = 0
+let g:clang_format#auto_format = 1
+let g:clang_format#auto_format_on_insert_leave = 0
+
+"this should detect the .clang-format file in the parent directory
+let g:clang_format#detect_style_file = 1
 
 
+"according to https://github.com/rhysd/vim-clang-format/issues/6
+"the style options will be run if no .clang-format file is detected
 let g:clang_format#style_options = {
             \ "AccessModifierOffset" : -4,
             \ "AlwaysBreakTemplateDeclarations" : "true",
