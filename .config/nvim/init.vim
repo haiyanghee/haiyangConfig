@@ -150,6 +150,9 @@ set autoread
 set ignorecase
 set smartcase
 
+""can use "f_", then repeat (go forward) by ";", and go backwards by ","
+""set iskeyword+=^-
+
 "set background=dark
 
 colorscheme dracula
@@ -274,6 +277,13 @@ let g:qfenter_keymap.vopen = ['<C-v>']
 let g:qfenter_keymap.hopen = ['<C-CR>', '<C-s>', '<C-x>']
 let g:qfenter_keymap.topen = ['<C-t>']
 
+ " When editing a file, always jump to the last cursor position
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+\   exe "normal! g'\"" |
+\ endif
+
+
 
 "table mode compatibility with markdown
 let g:table_mode_corner='|'
@@ -311,6 +321,9 @@ require("telescope").setup {
 -- To get telescope-file-browser loaded and working with telescope,
 -- you need to call load_extension, somewhere after setup function:
 require("telescope").load_extension "file_browser"
+require('telescope').load_extension('fzf')
+
+-- load the fzf-native
 require('telescope').load_extension('fzf')
 
 -- vim.api.nvim_set_keymap(

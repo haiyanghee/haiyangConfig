@@ -12,6 +12,9 @@ After 3.5.0.46-2, the font is bugged (also the emotes), but to fix the font you 
 
 After you download it, just put it into the folder `$HOME/.deepinwine/Deepin-WeChat/drive_c/windows/Fonts` and everything should work fine. 
 
+# Playing Paladins on Steam
+Currently (as of May 2022), Proton 6.21-GE 2 works ... 
+
 # Qutebrowser handling xdg-open?
 You can check the default application for MIME by running `env XDG_UTILS_DEBUG_LEVEL=10  xdg-mime query default text/html` (as stated in [Arch wiki](https://wiki.archlinux.org/title/Xdg-utils)). 
 
