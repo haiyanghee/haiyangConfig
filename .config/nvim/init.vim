@@ -200,8 +200,13 @@ nnoremap <C-k> :cprev<CR>zz
 nnoremap <leader>j :lnext<CR>zz
 nnoremap <leader>k :lprev<CR>zz
 
-nnoremap <Leader>te :tabe<cr>:Ex<cr>
+nnoremap <leader>te :tabe<cr>:Ex<cr>
 nnoremap <silent> <Leader>tc :tabclose<cr>
+"move/shift tab to the left
+noremap <leader>tl  :tabm -1<CR> 
+"move/shift tab to the right
+noremap <leader>tr :tabm +1<CR>
+
 "nnoremap k gk
 "nnoremap j gj
 
@@ -274,6 +279,9 @@ let g:table_mode_corner='|'
 "Telescope
 "Turns off deoplete completion in telescope prompt
 ""autocmd FileType TelescopePrompt call deoplete#custom#buffer_option('auto_complete', v:false)
+
+""line wrap for preview
+autocmd User TelescopePreviewerLoaded setlocal wrap
 
 lua<<EOF
 local actions = require "telescope.actions"
@@ -457,7 +465,7 @@ local function goto_definition(split_cmd)
 end
 
 -- go to definition as vsplit
-vim.lsp.handlers["textDocument/definition"] = goto_definition('vsplit')
+-- vim.lsp.handlers["textDocument/definition"] = goto_definition('vsplit')
 
 
 local nvim_lsp = require('lspconfig')
@@ -471,6 +479,9 @@ local on_attach = function(client, bufnr)
   local opts = { noremap=true, silent=true }
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+  buf_set_keymap('n', 'gv', '<Cmd>:vs | lua vim.lsp.buf.definition()<CR>', opts) -- verticle split of definition
+  buf_set_keymap('n', 'gh', '<Cmd>:sp | lua vim.lsp.buf.definition()<CR>', opts) -- horizontal split of definition
+
   -- buf_set_keymap('n', 'gd', "<cmd>lua require('telescope.builtin').lsp_definitions()<CR>", opts)
   -- buf_set_keymap('n', 'gd', '<Cmd>lua PeekDefinition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -494,8 +505,9 @@ local on_attach = function(client, bufnr)
   -- buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
 
-  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
+  -- [d and ]d are for errors only, since they are usually the most useful to jump to 
+  buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev({severity = vim.diagnostic.severity.ERROR})<CR>', opts)
+  buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next({severity = vim.diagnostic.severity.ERROR})<CR>', opts)
   buf_set_keymap('n', '<space>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
   buf_set_keymap('n', '<leader>ds', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<CR>", opts)
   -- buf_set_keymap('n', '<leader>ws', "<cmd>lua vim.lsp.buf.workspace_symbol()<CR>", opts)
