@@ -2,7 +2,7 @@ call plug#begin('~/.local/share/nvim/plugged')
 
 Plug 'dracula/vim', { 'as': 'dracula' }
 
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 
 
 Plug 'rhysd/vim-clang-format' 
@@ -99,7 +99,8 @@ Plug 'dhruvasagar/vim-table-mode'
 
 call plug#end()
 
-let g:Hexokinase_highlighters = [ 'backgroundfull' ]
+"show background color for hex values
+"let g:Hexokinase_highlighters = [ 'backgroundfull' ]
 
 "enable vimtex
 let g:vimtex_enabled=1 
@@ -516,16 +517,17 @@ local on_attach = function(client, bufnr)
   -- clang header open in vsplit (see below)
   buf_set_keymap('n', '<leader>h', '<cmd>:ClangdSwitchSourceHeaderVSplit<CR>', opts)
 
+  -- NOTE: client.server_capabilities is now a hashmap. To see the available options, refer to https://neovim.discourse.group/t/how-to-config-multiple-lsp-for-document-hover/3093
   -- Set some keybinds conditional on server capabilities
-  if client.resolved_capabilities.document_formatting then
+  if client.server_capabilities.documentFormattingProvider then
     buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   end
-  if client.resolved_capabilities.document_range_formatting then
+  if client.server_capabilities.documentRangeFormattingProvider then
     buf_set_keymap("v", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
 
     --Set autocommands conditional on server_capabilities
-  if client.resolved_capabilities.document_highlight then
+  if client.server_capabilities.documentHighlightProvider then
     vim.api.nvim_exec([[
       augroup lsp_document_highlight
         autocmd! * <buffer>
@@ -569,7 +571,7 @@ end
   end
 end
 
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- local capabilities = vim.lsp.protocol.make_client_capabilities()
 -- capabilities.textDocument.completion.completionItem.snippetSupport = true
