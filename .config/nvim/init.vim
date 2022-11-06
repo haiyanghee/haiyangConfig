@@ -33,6 +33,8 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
 Plug 'nvim-telescope/telescope-file-browser.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+
 
 ""Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 
@@ -139,6 +141,9 @@ set autoread
 set ignorecase
 set smartcase
 
+""can use "f_", then repeat (go forward) by ";", and go backwards by ","
+""set iskeyword+=^-
+
 "set background=dark
 
 colorscheme dracula
@@ -229,7 +234,7 @@ noremap <Leader>' ci"
 
 " set neovim's current directory to what I'm using  in terminal buffer shitty
 " solution but works: https://www.reddit.com/r/neovim/comments/7fafxv/set_neovims_current_directory_to_the_one_im_using/
-tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
+""tnoremap <C-A> pwd\|xclip -selection clipboard<CR><C-\><C-n>:cd <C-r>+<CR>i
 
 "To map <Esc> to exit terminal-mode:
 tnoremap <Esc> <C-\><C-n>
@@ -253,6 +258,13 @@ nnoremap <Leader>ev: :vsplit ~/.config/nvim/init.vim<cr>
 " use urlview
 "nnoremap <Leader>u :w<Home>slient <End> !urlview<CR>
 noremap <Leader>u :w<Home>silent <End> !urlview<CR>
+
+ " When editing a file, always jump to the last cursor position
+autocmd BufReadPost *
+\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+\   exe "normal! g'\"" |
+\ endif
+
 
 
 "table mode compatibility with markdown
@@ -290,6 +302,9 @@ require("telescope").setup {
 -- To get telescope-file-browser loaded and working with telescope,
 -- you need to call load_extension, somewhere after setup function:
 require("telescope").load_extension "file_browser"
+
+-- load the fzf-native
+require('telescope').load_extension('fzf')
 
 -- vim.api.nvim_set_keymap(
 --   "n",

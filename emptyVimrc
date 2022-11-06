@@ -9,7 +9,7 @@ set backspace=indent,eol,start
 set hlsearch
 set number
 "relative line numbers on all files!
-set relativenumber
+"set relativenumber
 set laststatus=2
 set ruler
 set tabstop=4 shiftwidth=4 expandtab
@@ -71,5 +71,5 @@ nnoremap <silent> <Leader>tc :tabclose<cr>
 ""nnoremap <C-j> <C-w> j
 ""nnoremap <C-k> <C-w> k
 ""nnoremap <C-l> <C-w> l
-map <C-c> "+y<CR>
+map <C-c> "+y
 
