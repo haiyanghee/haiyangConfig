@@ -602,7 +602,7 @@ end
         },
         -- this will expand the function overloads as explained in https://github.com/clangd/clangd/issues/172
         -- cmd = { "clangd", "--background-index", "--completion-style=detailed" },
-        cmd = { "clangd", "--background-index" },
+        cmd = { "clangd", "--background-index", "--enable-config" },
         capabilities = capabilities,
    }
 
