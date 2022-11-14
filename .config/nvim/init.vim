@@ -209,12 +209,12 @@ nnoremap <C-k> :cprev<CR>zz
 nnoremap <leader>j :lnext<CR>zz
 nnoremap <leader>k :lprev<CR>zz
 
-nnoremap <leader>te :tabe<cr>:Ex<cr>
+nnoremap <silent> <leader>te :tabe<cr>:Ex<cr>
 nnoremap <silent> <Leader>tc :tabclose<cr>
 "move/shift tab to the left
-noremap <leader>tl  :tabm -1<CR> 
+noremap <silent> <leader>tl  :tabm -1<CR> 
 "move/shift tab to the right
-noremap <leader>tr :tabm +1<CR>
+noremap <silent> <leader>tr :tabm +1<CR>
 
 "nnoremap k gk
 "nnoremap j gj
