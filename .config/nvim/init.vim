@@ -125,7 +125,8 @@ endif
 
 
 syntax on
-set mouse=a
+"NO MOUSE
+set mouse=
 set noswapfile
 set incsearch 
 set showmatch 
