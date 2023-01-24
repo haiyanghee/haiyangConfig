@@ -3,9 +3,13 @@
 #xsetwacom set 14 MapToOutput HDMI-A-0
 #xsetwacom set 23 MapToOutput HDMI-A-0
 #xsetwacom set 24 MapToOutput HDMI-A-0
-tabletnum=$(xsetwacom list | grep -wo "[0-9]*" | tr '\n' ' ' )
-xsetwacom set $(echo $tabletnum | awk '{ print $1}') MapToOutput HDMI-A-0
-xsetwacom set $(echo $tabletnum | awk '{ print $2}') MapToOutput HDMI-A-0
+
+SCREEN="HDMI-A-0"
+
+tabletnum=$(xsetwacom list | grep -iw stylus |grep -wo "[0-9]*")
+
+xsetwacom set "$tabletnum" MapToOutput "$SCREEN"
+
 
 #some keys, for example, the "Add" or "Plus" key, is a modifier for xsetwacom, so you cant just type "key ctrl +"..
 #can find the corresponding key in /usr/include/X11/keysymdef.h as the manual stated.
