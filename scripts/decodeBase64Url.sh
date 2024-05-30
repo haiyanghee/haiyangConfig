@@ -1,0 +1,3 @@
+#!/bin/bash
+#basenc have --base64 and --base64url option ...
+basenc -d --base64url  -
