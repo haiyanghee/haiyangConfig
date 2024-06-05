@@ -222,7 +222,7 @@ map <C-c> "+y
 "bracket completion
 inoremap ( ()<esc>ha
 inoremap { {}<esc>ha
-inoremap {<cr> {<cr>}<esc>ko
+inoremap {<cr> {<cr>}<esc>O
 inoremap [ []<esc>ha
 "inoremap ' ''<esc>ha
 inoremap " ""<esc>ha
