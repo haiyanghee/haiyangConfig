@@ -145,7 +145,7 @@ export TERMINAL="Alacritty"
 export PROMPT_DIRTRIM=3
 
 #export BROWSER="chromium"
-export BROWSER="qutebrowser"
+export BROWSER="firefox"
 
 #wine that uses deepin 5 (maybe not need? but for now its good)
 export WINEPREFIX="$HOME/.deepinwine/Deepin-WeChat"
