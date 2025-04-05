@@ -52,7 +52,7 @@ c.colors.webpage.preferred_color_scheme = 'dark'
 
 c.downloads.location.directory = "/home/haiyang/Downloads"
 
-c.editor.command = ['st','-e', 'nvim',  '{file}']
+c.editor.command = ['alacritty','-e', 'nvim',  '{file}']
 
 c.scrolling.smooth = True
 

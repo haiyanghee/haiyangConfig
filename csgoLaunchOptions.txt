@@ -1,1 +1,3 @@
 -console -novid -nojoy -windowed -high -threads 8 +r_dynamic 0 +fps_max 180 
+
+sensitivity 1.114663

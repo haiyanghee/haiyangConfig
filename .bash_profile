@@ -27,3 +27,5 @@ if [ -f "${SSH_ENV}" ]; then
 else
      start_agent;
 fi
+
+if test -x ~/.scripts/startNixDaemons.sh ; then sudo ~/.scripts/startNixDaemons.sh ; fi

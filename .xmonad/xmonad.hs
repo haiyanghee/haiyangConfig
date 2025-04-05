@@ -72,7 +72,7 @@ main = do
 
 
             -- ,manageHook =  manageDocks <+> manageHook defaultConfig
-            ,manageHook =  manageHook def <+> manageDocks
+            ,manageHook =  myManageHook <+> manageHook def <+> manageDocks
             , layoutHook         = avoidStruts $ myLayoutHook
 
             , borderWidth        = myBorderWidth
@@ -150,7 +150,10 @@ main = do
 myManageHook = composeAll
     [ className =? "Gimp"      --> doFloat
     , className =? "Vncviewer" --> doFloat
+    -- open firefox to workspace 9
+    , title =? "Mozilla Firefox"     --> doShift ( myWorkspaces !! 8 )
     ]
+
 
 -- myLog screen handle = dynamicLogWithPP . marshallPP screen $ xmobarPP
 --          { ppOutput = hPutStrLn handle 
@@ -205,10 +208,13 @@ colorTrayer = "--tint 0x282a36"
 
 
 -- myTerminal="alacritty"
-myTerminal="alacrittyWow"
+-- myTerminal="alacrittyWow"
+myTerminal="~/.scripts/alacritty-spawn-cwd.sh"
 myModMask=mod4Mask
 myBorderWidth=3
 myBrowser="qutebrowser"
+
+weChatScript=".scripts/wechatOpen.sh"
 
 confirm :: String -> X () -> X ()
 confirm msg f = do
@@ -233,6 +239,12 @@ myKeys conf@(XConfig {X.modMask = modMask}) =
     , ((modMask,               xK_space ), sendMessage NextLayout) -- %! Rotate through the available layout algorithms
 
 
+   , ((modMask,   xK_Down     ), windows W.focusDown) -- %! Move focus to the next window
+   , ((modMask,   xK_Up     ), windows W.focusUp  ) -- %! Move focus to the previous window
+
+   , ((modMask,   xK_m     ),   spawn weChatScript) -- open wechat ...
+
+
     -- switch between adjacent workspaces
     , ((modMask .|. shiftMask, xK_l),  moveTo Next spacesOnCurrentScreen)
     , ((modMask .|. shiftMask, xK_h),  moveTo Prev spacesOnCurrentScreen)
@@ -242,6 +254,9 @@ myKeys conf@(XConfig {X.modMask = modMask}) =
     -- TODO: right now it can toggle between different screens...
     -- , ((modMask              , xK_Tab),     toggleWS)
     , ((modMask              , xK_Tab),     mytoggleWS' )
+
+    -- switch to next screen
+    , ((modMask .|. shiftMask  , xK_Tab),     screenBy(1) >>= screenWorkspace >>= flip whenJust (windows . W.view) )
     ]
     ++
         -- [ ( (m .|. modMask, k), X.windows $ f i)
@@ -286,10 +301,11 @@ myLayoutHook = smartBorders $ myDefaultLayout
                myDefaultLayout =    Tall 1 (3/100) (1/2) ||| Full
 
 -- myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y -> (x,y)
-myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces ([1..9] ++ [1..9]) -- (,) == \x y -> (x,y)
+myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces ([1..9] ++ [1..9]) 
 
 
-clickable monitorIndex ws = "<action=xdotool key super+"++show i ++">"++ws++"</action>"
+-- added a space in middle so it is easier to click ... but not really I guess
+clickable monitorIndex ws = "<action=xdotool key super+"++show i ++">|"++ws++"|</action>"
 -- clickable monitorIndex ws = workStr
     where 
     workStr = show monitorIndex ++"_"++ ws

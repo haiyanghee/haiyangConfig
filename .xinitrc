@@ -50,6 +50,16 @@ fi
 
 source ~/.bashrc
 
+
+# make xmobar to read the pipe ...
+# https://tlatsas.github.io/2013/11/03/reading-from-named-pipes-in-xmobar/
+volume_pipe=/tmp/.volume-pipe
+if [[ ! -e $volume_pipe ]]; then
+    mkfifo $_volume_pipe
+fi
+~/.config/xmobar/scripts/xmobar_alsa.sh &
+
+
 #set cursor
 xsetroot -cursor_name left_ptr
 #turns on numlock
@@ -69,7 +79,10 @@ sxhkd &
 #udiskie --tray& #automatically mount usb! very cool
 
 #start imwheel
-imwheel -f -b 45&
+#imwheel -f -b 45&
+
+#fix/patch for libinput for mouse scrolling: https://github.com/tkkcc/libinput_patch
+#echo 2 > /tmp/libinput_discrete_deltay_multiplier
 
 xset m 3/2 0
 #amixer -c 0 set Speaker 100%
@@ -94,11 +107,16 @@ feh --bg-max $wallpaper &
 ~/.scripts/normalScreenSaverTimeout.sh &
 ~/.scripts/redshiftopen.sh &
 
+#nohup easyeffects --gapplication-service
+
 
 #exec i3
 
-#dwmblocks &
-#exec dwm
+#bluetooth 
+blueman-applet&
+
+dwmblocks &
+exec dwm
 
 #exec ~/.scripts/startDwm.sh
-exec xmonad
+#exec xmonad

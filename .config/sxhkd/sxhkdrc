@@ -1,15 +1,25 @@
 XF86Audio{Raise,Lower}Volume
-#amixer sset Master 2%{+,-}; pkill -RTMIN+3 dwmblocks 
 	    pulsemixer --change-volume {+,-}2; pkill -RTMIN+3 dwmblocks 
+	    #pulsemixer --change-volume {+,-}2; ~/.config/xmobar/scripts/xmobar_alsa.sh
+#amixer sset Master 2%{+,-}; pkill -RTMIN+3 dwmblocks 
+
 XF86AudioMute
-        amixer sset Master toggle; pkill -RTMIN+3 dwmblocks 
+        pulsemixer --toggle-mute; pkill -RTMIN+3 dwmblocks 
+        #amixer sset Master toggle; pkill -RTMIN+3 dwmblocks 
+        #amixer sset Master toggle ; ~/.config/xmobar/scripts/xmobar_alsa.sh
+
 XF86AudioMicMute
         amixer set Capture toggle; pkill -RTMIN+3 dwmblocks 
+        #amixer set Capture toggle ; ~/.config/xmobar/scripts/xmobar_alsa.sh
+
 super + shift + s
         ~/.scripts/sp.sh
+
 super + s
         flameshot gui
 Print
         scrot ~/Screenshots/%s_%H%M_%d.%m.%Y_$wx$h.png
+
 super + Print
         scrot -u ~/Screenshots/%s_%H%M_%d.%m.%Y_$wx$h.png
+

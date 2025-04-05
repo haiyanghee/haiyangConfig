@@ -188,12 +188,12 @@ nnoremap <leader>cd :cd %:p:h<CR>:pwd<CR>
 "visually select text
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
-"copy file name
-nnoremap cf :let @+=expand("%:t")<CR>
-nnoremap yf :let @"=expand("%:t")<CR>
-"copy file path
-nnoremap cF :let @+=expand("%:p")<CR>
-nnoremap yF :let @"=expand("%:p")<CR>
+"""copy file name
+""nnoremap cf :let @+=expand("%:t")<CR>
+""nnoremap yf :let @"=expand("%:t")<CR>
+"""copy file path
+""nnoremap cF :let @+=expand("%:p")<CR>
+""nnoremap yF :let @"=expand("%:p")<CR>
 
 "open quickfix list
 nnoremap <C-q> :copen<CR>
@@ -603,7 +603,7 @@ end
         },
         -- this will expand the function overloads as explained in https://github.com/clangd/clangd/issues/172
         -- cmd = { "clangd", "--background-index", "--completion-style=detailed" },
-        cmd = { "clangd", "--background-index", "--enable-config" },
+        cmd = { "clangd", "--background-index"},
         capabilities = capabilities,
    }
 
@@ -942,7 +942,7 @@ set splitbelow
 augroup filetypeAutoCommands
     autocmd! filetypeAutoCommands
 
-    au  BufRead,BufEnter * checktime
+    ""au  BufRead,BufEnter * checktime
 
     au VimResized * exe "normal \<c-w>="
     

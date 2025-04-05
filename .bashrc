@@ -71,7 +71,7 @@ deef() {
 
 #My old bashrc aliases
 #Run the git ssh bash script on startup
-source ~/.scripts/gitssh.sh
+#source ~/.scripts/gitssh.sh
 
 #get zshrc like completion
 bind 'set show-all-if-ambiguous on'
@@ -102,15 +102,16 @@ alias 'cd..'='cd_up'
 #some useful shortcuts:
 alias getsong="youtube-dl -f bestaudio -o '~/Music/youtube/%(title)s.%(ext)s' --proxy \"\""	#get youtube song
 alias youtube-dl="youtube-dl --proxy \"\""
-alias dim="echo 53 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
-alias halfdim="echo 80 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
-alias bright="echo 255 | sudo tee  /sys/class/backlight/amdgpu_bl0//brightness"
+alias dim="echo 53 | sudo tee  /sys/class/backlight/amdgpu_bl1//brightness"
+alias halfdim="echo 80 | sudo tee  /sys/class/backlight/amdgpu_bl1//brightness"
+alias bright="echo 255 | sudo tee  /sys/class/backlight/amdgpu_bl1//brightness"
 alias zathura="zathura --fork"
 alias lock="~/config/lockscreen.sh"
 alias la="ls -la"
 alias ll='ls -l'
 alias l='ls -CF'
 alias ume='ume "cd `xcwd`"'
+#alias sshUC="ssh haiyang.he@linux.cpsc.ucalgary.ca -Y"
 alias sshUC="ssh haiyang.he@linuxlab.cpsc.ucalgary.ca -Y"
 alias sshUCARM="ssh haiyang.he@arm.cpsc.ucalgary.ca -Y"
 alias udiskmount="udisksctl mount -b "
@@ -123,6 +124,10 @@ alias gc='git commit'
 #alias gl='git log --pretty=short'
 alias gb='git branch'
 alias gco='git checkout'
+alias sysupgrade='sudo pacman -Sy archlinux-keyring && sudo pacman -Su'
+export dellFreebsdIP="192.168.0.69"
+alias sshDellFreebsd="ssh haiyang@${dellFreebsdIP}"
+alias sshAfs="ssh -Y haihe3j1@orw-afsdev-bm95.wv.mentorg.com"
 
 export http_proxy=""
 export https_proxy=""
@@ -144,8 +149,9 @@ export TERMINAL="Alacritty"
 #only show 3 dir depth so your screen does not get overwhelmed with paths..
 export PROMPT_DIRTRIM=3
 
+export BROWSER="firefox"
 #export BROWSER="chromium"
-export BROWSER="qutebrowser"
+#export BROWSER="qutebrowser"
 
 #wine that uses deepin 5 (maybe not need? but for now its good)
 export WINEPREFIX="$HOME/.deepinwine/Deepin-WeChat"
@@ -172,9 +178,6 @@ fi
 
 #add my scripts to the path so I don't need to manually type them
 export PATH=$PATH:~/.local/bin/:~/.scripts:~/dwmblocks-haiyang/scripts
-
-export DENO_INSTALL="/home/haiyang/.deno"
-export PATH="$DENO_INSTALL/bin:$PATH"
 
 # nvim server addr 
 # if multiple nvim buffers are opened, only one of them gets the /tmp/nvimsocket

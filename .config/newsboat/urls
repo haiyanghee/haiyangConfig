@@ -1,9 +1,12 @@
 " "
 "---News---"
-https://suckless.org/atom.xml   #suckless atom feed
+https://archlinux.org/feeds/news/   # arch news
+https://suckless.org/atom.xml   # suckless atom feed
+https://newpipe.net/blog/feeds/news.atom   #newpipe feed
 "---Vids---"
 https://videos.lukesmith.xyz/feeds/videos.xml #luke's peertube
 "---Comics---"
+https://www.1kkk.com/rss.ashx?cid=39019 comic   #夏日重现
 http://www.1kkk.com/rss.ashx?cid=10684  comic   #一拳超人
 http://www.1kkk.com/rss.ashx?cid=46568  comic   #电锯人
 http://www.1kkk.com/rss.ashx?cid=59347  comic
@@ -13,6 +16,7 @@ http://www.1kkk.com/rss.ashx?cid=41708  comic   #寓言杀手
 http://www.1kkk.com/rss.ashx?cid=6746   comic   #王者天下
 http://www.1kkk.com/rss.ashx?cid=61292  comic   #怪兽8号
 http://www.1kkk.com/rss.ashx?cid=675    comic   #柯南
+https://www.1kkk.com/rss.ashx?cid=42149 comic   #零的日常
 http://www.1kkk.com/rss.ashx?cid=49709  comic   #欲望寄生
 http://www.1kkk.com/rss.ashx?cid=66016  comic   
 http://www.1kkk.com/rss.ashx?cid=42001  comic   #隐语岛
